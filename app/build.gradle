@@ -74,6 +74,8 @@ dependencies {
     compile project(':android-support-v4-preferencefragment') // https://github.com/kolavar/android-support-v4-preferencefragment
     compile 'com.github.chrisbanes.photoview:library:1.2.4' // https://github.com/chrisbanes/PhotoView
     compile 'org.jsoup:jsoup:1.10.2' // https://github.com/jhy/jsoup
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 android.applicationVariants.all { variant ->

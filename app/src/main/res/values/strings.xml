@@ -180,17 +180,17 @@
     <string name="map_style_caption">Карта</string>
 
     <!--<plurals name="map_council_member_friends">-->
-        <!--<item quantity="one">%d соратник</item>-->
-        <!--<item quantity="few">%d соратника</item>-->
-        <!--<item quantity="many">%d соратников</item>-->
+    <!--<item quantity="one">%d соратник</item>-->
+    <!--<item quantity="few">%d соратника</item>-->
+    <!--<item quantity="many">%d соратников</item>-->
     <!--</plurals>-->
     <string name="map_council_member_friends_one">%d соратник</string>
     <string name="map_council_member_friends_few">%d соратника</string>
     <string name="map_council_member_friends_many">%d соратников</string>
     <!--<plurals name="map_council_member_enemies">-->
-        <!--<item quantity="one">%d противник</item>-->
-        <!--<item quantity="few">%d противника</item>-->
-        <!--<item quantity="many">%d противников</item>-->
+    <!--<item quantity="one">%d противник</item>-->
+    <!--<item quantity="few">%d противника</item>-->
+    <!--<item quantity="many">%d противников</item>-->
     <!--</plurals>-->
     <string name="map_council_member_enemies_one">%d противник</string>
     <string name="map_council_member_enemies_few">%d противника</string>
@@ -204,9 +204,9 @@
     <string name="notification_quest_choice">Доступен выбор в квесте</string>
 
     <!--<plurals name="notification_lines">-->
-        <!--<item quantity="one">%d событие</item>-->
-        <!--<item quantity="few">%d события</item>-->
-        <!--<item quantity="many">%d событий</item>-->
+    <!--<item quantity="one">%d событие</item>-->
+    <!--<item quantity="few">%d события</item>-->
+    <!--<item quantity="many">%d событий</item>-->
     <!--</plurals>-->
     <string name="notification_lines_one">%d событие</string>
     <string name="notification_lines_few">%d события</string>
@@ -366,5 +366,11 @@
     <string name="settings_key_misc_confirmation_quest_choice">KEY_SETTINGS_MISC_CONFIRMATION_QUEST_CHOICE</string>
     <string name="settings_title_misc_confirmation_bag_drop">Подтверждение при выбрасывании вещи</string>
     <string name="settings_title_misc_confirmation_quest_choice">Подтверждение при выборе в квесте</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>

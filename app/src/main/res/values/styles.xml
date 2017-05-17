@@ -13,7 +13,7 @@
 
         <item name="android:childDivider">@color/common_delimiter</item>
     </style>
-    
+
     <style name="ActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:titleTextStyle">@style/ActionBarTitle</item>
         <item name="titleTextStyle">@style/ActionBarTitle</item>
@@ -60,5 +60,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">8dp</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

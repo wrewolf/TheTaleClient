@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:background="@color/drawer_background"
-    tools:context=".NavigationDrawerFragment">
+    tools:context="com.wrewolf.thetaleclient.fragment.NavigationDrawerFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

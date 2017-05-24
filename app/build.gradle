@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.firebase-crash'
 android {
     compileSdkVersion 25
-    buildToolsVersion "26-rc1"
+    buildToolsVersion "26.0.0-rc2"
     def versionPropsFile = file('version.properties')
 
     if (versionPropsFile.canRead()) {
@@ -62,29 +63,62 @@ android {
 dependencies {
     // latest versions of libraries as of 15.05.2017
     compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.google.firebase:firebase-core:10.2.4'
-    compile 'com.google.firebase:firebase-messaging:10.2.4'
-    compile 'com.google.firebase:firebase-crash:10.2.4'
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
-    compile 'com.squareup.okio:okio:1.11.0'
+    compile 'com.google.firebase:firebase-core:10.2.6'
+    compile 'com.google.firebase:firebase-messaging:10.2.6'
+    compile 'com.google.firebase:firebase-crash:10.2.6'
+
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'net.grandcentrix.tray:tray:0.11.1'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1' // https://github.com/astuetz/PagerSlidingTabStrip
-    compile project(':android-support-v4-preferencefragment') // https://github.com/kolavar/android-support-v4-preferencefragment
-    compile 'com.github.chrisbanes.photoview:library:1.2.4' // https://github.com/chrisbanes/PhotoView
-    compile 'org.jsoup:jsoup:1.10.2' // https://github.com/jhy/jsoup
+
+    // https://github.com/astuetz/PagerSlidingTabStrip
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+
+    // https://github.com/kolavar/android-support-v4-preferencefragment
+    compile project(':android-support-v4-preferencefragment')
+
+    // https://github.com/chrisbanes/PhotoView
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+
+    // https://github.com/jhy/jsoup
+    compile 'org.jsoup:jsoup:1.10.2'
+
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //Dagger
+//    compile 'com.google.dagger:dagger-android:2.x'
+//    compile 'com.google.dagger:dagger-android-support:2.x' // if you use the support libraries
+//    annotationProcessor 'com.google.dagger:dagger-android-processor:2.x'
+//    provided 'javax.annotation:jsr250-api:1.0'
+
+    //Retrofit
+//    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+
+    //OkHttp
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.0'
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //Gson
+//    compile 'com.google.code.gson:gson:2.8.0'
+//    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+
+    //Butter Knife
+//    compile 'com.jakewharton:butterknife:8.6.0'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 }
 
-android.applicationVariants.all { variant ->
-    variant.getOutputs().each { output ->
-        if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
-            output.outputFile = new File(output.outputFile.parent,
-                    variant.buildType.name + "-" + variant.mergedFlavor.versionName + "-b" + variant.mergedFlavor.versionCode + ".apk")
-        }
-    }
-}
+//android.applicationVariants.all { variant ->
+//    variant.getOutputs().each { output ->
+//        if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+//            output.outputFile = new File(output.outputFile.parent,
+//                    variant.buildType.name + "-" + variant.mergedFlavor.versionName + "-b" + variant.mergedFlavor.versionCode + ".apk")
+//        }
+//    }
+//}
 
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}

@@ -16,6 +16,7 @@ public enum PlaceSpecialization {
     TRANSPORT_NODE(6, "Транспортный узел"),
     LIBERTY_CITY(7, "Вольница"),
     HOLY_CITY(8, "Святой город"),
+    REGULAR_CITY(9, "Обычный город"),
     ;
 
     public final int code;

@@ -67,7 +67,9 @@ public class QuestActorDialog extends BaseDialog {
                                 setPlaceLink(
                                         view.findViewById(R.id.dialog_quest_actor_person_place),
                                         getString(R.string.quest_actor_place),
-                                        response.places.get(questActorInfo.personInfo.placeId).name,
+                                        // TODO: переписать
+                                        "dummy",
+//                                        response.places.get(questActorInfo.personInfo.placeId).name,
                                         questActorInfo.personInfo.placeId);
                             }
 
@@ -94,7 +96,9 @@ public class QuestActorDialog extends BaseDialog {
                             public void processResponse(MapResponse response) {
                                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_place_size), UiUtils.getInfoItem(
                                         getString(R.string.map_place_size),
-                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
+                                        // TODO: заглушка
+                                        String.valueOf(0)));
+//                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
                             }
 
                             @Override

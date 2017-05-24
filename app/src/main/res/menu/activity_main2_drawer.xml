@@ -3,34 +3,36 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_game"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import"/>
+            android:title="Игра"/>
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
+            android:title="Карта"/>
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_chat"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
+            android:title="Чат"/>
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_cite"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools"/>
+            android:title="Перейти к сайту"/>
+        <item
+            android:id="@+id/nav_find"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Поиск игрока"/>
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Настройки"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Выход"/>
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_send"
+            android:title="О приложении"/>
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share"/>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"/>
-        </menu>
-    </item>
-
 </menu>

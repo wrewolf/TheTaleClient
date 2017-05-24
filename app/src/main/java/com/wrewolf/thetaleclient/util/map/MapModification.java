@@ -12,13 +12,8 @@ import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.TheTaleClientApplication;
 import com.wrewolf.thetaleclient.api.dictionary.MapCellWindSpeed;
 import com.wrewolf.thetaleclient.api.model.MapCellTerrainInfo;
-import com.wrewolf.thetaleclient.api.model.MapPlaceInfo;
 import com.wrewolf.thetaleclient.api.response.MapResponse;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,25 +108,26 @@ public enum MapModification {
                 break;
 
             case INFLUENCE:
-                final int size = mapInfo.places.size();
-                if(size >= colors.length) {
-                    throw new IllegalStateException("Not enough colors");
-                }
-                influencePaint = new HashMap<>(size + 1);
-                final List<Integer> colorsList = new ArrayList<>();
-                Collections.addAll(colorsList, colors);
-                Collections.shuffle(colorsList);
-
-                final Paint wildernessPaint = new Paint();
-                wildernessPaint.setColor(colorsList.get(0));
-                influencePaint.put(0, wildernessPaint);
-
-                final List<MapPlaceInfo> places = new ArrayList<>(mapInfo.places.values());
-                for(int i = 0; i < size; i++) {
-                    final Paint paint = new Paint();
-                    paint.setColor(colorsList.get(i + 1));
-                    influencePaint.put(places.get(i).id, paint);
-                }
+                // TODO: переписать,заглушка
+//                final int size = mapInfo.places.size();
+//                if(size >= colors.length) {
+//                    throw new IllegalStateException("Not enough colors");
+//                }
+//                influencePaint = new HashMap<>(size + 1);
+//                final List<Integer> colorsList = new ArrayList<>();
+//                Collections.addAll(colorsList, colors);
+//                Collections.shuffle(colorsList);
+//
+//                final Paint wildernessPaint = new Paint();
+//                wildernessPaint.setColor(colorsList.get(0));
+//                influencePaint.put(0, wildernessPaint);
+//
+//                final List<MapPlaceInfo> places = new ArrayList<>(mapInfo.places.values());
+//                for(int i = 0; i < size; i++) {
+//                    final Paint paint = new Paint();
+//                    paint.setColor(colorsList.get(i + 1));
+//                    influencePaint.put(places.get(i).id, paint);
+//                }
 
                 break;
         }

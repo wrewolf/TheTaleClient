@@ -50,9 +50,7 @@ public class CardUseDialog extends BaseDialog {
     private CardInfo card;
 
     private View viewAction;
-    private View blockPlace;
-    private View blockPerson;
-    private TextView textPlace;
+  private TextView textPlace;
     private TextView textPerson;
 
     public static CardUseDialog newInstance(final String title, final CardInfo card) {
@@ -86,8 +84,8 @@ public class CardUseDialog extends BaseDialog {
         final boolean isPersonPresent = isPersonPresent(card.type.getTargetType());
 
         viewAction = view.findViewById(R.id.dialog_card_use_action);
-        blockPlace = view.findViewById(R.id.dialog_card_use_place_block);
-        blockPerson = view.findViewById(R.id.dialog_card_use_person_block);
+      View blockPlace = view.findViewById(R.id.dialog_card_use_place_block);
+      View blockPerson = view.findViewById(R.id.dialog_card_use_person_block);
         textPlace = (TextView) view.findViewById(R.id.dialog_card_use_place);
         textPerson = (TextView) view.findViewById(R.id.dialog_card_use_person);
 

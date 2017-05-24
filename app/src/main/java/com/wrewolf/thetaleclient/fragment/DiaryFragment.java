@@ -23,14 +23,12 @@ public class DiaryFragment extends WrapperFragment {
 
     private LayoutInflater layoutInflater;
 
-    private View rootView;
-
-    private ViewGroup diaryContainer;
+  private ViewGroup diaryContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_diary, container, false);
+      View rootView = inflater.inflate(R.layout.fragment_diary, container, false);
 
         diaryContainer = (ViewGroup) rootView.findViewById(R.id.diary_container);
 

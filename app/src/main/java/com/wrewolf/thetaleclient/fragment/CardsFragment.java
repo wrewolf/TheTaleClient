@@ -49,9 +49,7 @@ public class CardsFragment extends WrapperFragment {
 
     private LayoutInflater layoutInflater;
 
-    private View rootView;
-
-    private View helpCounterContainer;
+  private View helpCounterContainer;
     private TextView helpCounter;
     private ProgressBar helpCounterProgress;
     private RequestActionView helpTakeCardWidget;
@@ -74,7 +72,7 @@ public class CardsFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_cards, container, false);
+      View rootView = inflater.inflate(R.layout.fragment_cards, container, false);
 
         helpCounterContainer = rootView.findViewById(R.id.cards_container_help_to_next_card);
         helpCounter = (TextView) rootView.findViewById(R.id.cards_help_counter);

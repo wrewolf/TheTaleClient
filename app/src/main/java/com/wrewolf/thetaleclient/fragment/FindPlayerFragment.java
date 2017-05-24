@@ -43,9 +43,8 @@ public class FindPlayerFragment extends WrapperFragment {
     private static final Handler handler = new Handler(Looper.getMainLooper());
 
     private LayoutInflater layoutInflater;
-    private View rootView;
 
-    private TextView textQuery;
+  private TextView textQuery;
     private View actionSearch;
     private ListView accountsList;
     private TextView textError;
@@ -54,7 +53,7 @@ public class FindPlayerFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_find_player, container, false);
+      View rootView = inflater.inflate(R.layout.fragment_find_player, container, false);
 
         textQuery = (TextView) rootView.findViewById(R.id.find_player_prefix);
         actionSearch = rootView.findViewById(R.id.find_player_search);

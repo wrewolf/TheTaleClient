@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spannable;
@@ -70,11 +69,7 @@ public class UiUtils {
     }
 
     public static void removeGlobalLayoutListener(final View view, final ViewTreeObserver.OnGlobalLayoutListener listener) {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            view.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
-        } else {
             view.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-        }
     }
 
     public static void showKeyboard(final Activity activity) {

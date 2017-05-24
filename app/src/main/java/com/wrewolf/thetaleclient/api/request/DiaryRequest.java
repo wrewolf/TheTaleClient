@@ -1,13 +1,9 @@
 package com.wrewolf.thetaleclient.api.request;
 
-import com.wrewolf.thetaleclient.R;
-import com.wrewolf.thetaleclient.TheTaleClientApplication;
 import com.wrewolf.thetaleclient.api.AbstractApiRequest;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
-import com.wrewolf.thetaleclient.api.ApiResponseStatus;
 import com.wrewolf.thetaleclient.api.HttpMethod;
 import com.wrewolf.thetaleclient.api.response.DiaryResponse;
-import com.wrewolf.thetaleclient.util.RequestUtils;
 
 import org.json.JSONException;
 

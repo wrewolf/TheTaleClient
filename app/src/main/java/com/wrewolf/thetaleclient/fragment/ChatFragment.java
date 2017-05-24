@@ -66,9 +66,6 @@ public class ChatFragment extends WrapperFragment {
         }
     };
 
-    private LayoutInflater layoutInflater;
-    private View rootView;
-
     private ListView chatMessagesList;
     private ChatAdapter chatAdapter;
 
@@ -79,8 +76,8 @@ public class ChatFragment extends WrapperFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        LayoutInflater layoutInflater = inflater;
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         chatMessagesList = (ListView) rootView.findViewById(R.id.chat_list);
         registerForContextMenu(chatMessagesList);
@@ -171,16 +168,11 @@ public class ChatFragment extends WrapperFragment {
 
         switch(item.getItemId()) {
             case R.id.chat_action_copy:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     ClipboardManager clipboardManager =
                             (ClipboardManager) TheTaleClientApplication.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clipData = ClipData.newPlainText("", message);
                     clipboardManager.setPrimaryClip(clipData);
-                } else {
-                    android.text.ClipboardManager clipboardManager =
-                            (android.text.ClipboardManager) TheTaleClientApplication.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboardManager.setText(message);
-                }
+
                 return true;
 
             case R.id.chat_action_quote:

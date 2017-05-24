@@ -51,9 +51,7 @@ public class EquipmentFragment extends WrapperFragment {
 
     private LayoutInflater layoutInflater;
 
-    private View rootView;
-
-    private View equipmentEffects;
+  private View equipmentEffects;
     private ViewGroup equipmentContainer;
     private TextView bagCaption;
     private ViewGroup bagContainer;
@@ -64,7 +62,7 @@ public class EquipmentFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = layoutInflater.inflate(R.layout.fragment_equipment, container, false);
+      View rootView = layoutInflater.inflate(R.layout.fragment_equipment, container, false);
 
         equipmentEffects = rootView.findViewById(R.id.equipment_effects);
         equipmentContainer = (ViewGroup) rootView.findViewById(R.id.equipment_container);

@@ -71,7 +71,6 @@ public class GameInfoFragment extends WrapperFragment {
     };
 
     private LayoutInflater layoutInflater;
-    private View rootView;
 
     private TextView textRaceGender;
     private TextView textLevel;
@@ -117,7 +116,7 @@ public class GameInfoFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_game_info, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_game_info, container, false);
 
         textRaceGender = (TextView) rootView.findViewById(R.id.game_info_race_gender);
         textLevel = (TextView) rootView.findViewById(R.id.game_info_level);
@@ -323,10 +322,6 @@ public class GameInfoFragment extends WrapperFragment {
                 if(gameInfoResponse.account.isOwnInfo) {
                     final EnergyInfo energy = gameInfoResponse.account.hero.energy;
                     progressEnergy.setMax(energy.max);
-                    // https://code.google.com/p/android/issues/detail?id=12945
-                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                        progressEnergy.setProgress(0);
-                    }
                     progressEnergy.setProgress(energy.current);
                     textEnergy.setText(GameInfoUtils.getEnergyString(energy));
                 }

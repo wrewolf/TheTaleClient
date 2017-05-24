@@ -39,9 +39,8 @@ public class ProfileFragment extends WrapperFragment {
     private static final int PLACES_HISTORY_COUNT_POLITICS = 10;
 
     private LayoutInflater layoutInflater;
-    private View rootView;
 
-    private TextView textName;
+  private TextView textName;
     private TextView textAffectGame;
     private TextView textMight;
     private TextView textAchievementPoints;
@@ -58,7 +57,7 @@ public class ProfileFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+      View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         textName = (TextView) rootView.findViewById(R.id.profile_name);
         textAffectGame = (TextView) rootView.findViewById(R.id.profile_affect_game);

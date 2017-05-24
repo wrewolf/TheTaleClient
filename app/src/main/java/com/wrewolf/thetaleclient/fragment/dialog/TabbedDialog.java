@@ -21,8 +21,7 @@ public class TabbedDialog extends BaseDialog {
 
     private static final String PARAM_CAPTION = "PARAM_CAPTION";
     private TabbedDialogTabsAdapter tabsAdapter = null;
-    private PagerAdapter pagerAdapter;
-    private boolean isTabsInitialized = true;
+  private boolean isTabsInitialized = true;
 
     public static TabbedDialog newInstance(final String caption) {
         final TabbedDialog dialog = new TabbedDialog();
@@ -65,7 +64,7 @@ public class TabbedDialog extends BaseDialog {
 
     private void setupTabs() {
         final WrappingViewPager viewPager = (WrappingViewPager) getView().findViewById(R.id.dialog_tabbed_pager);
-        pagerAdapter = new TabbedDialogPagerAdapter(tabsAdapter);
+      PagerAdapter pagerAdapter = new TabbedDialogPagerAdapter(tabsAdapter);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
         ((PagerSlidingTabStrip) getView().findViewById(R.id.dialog_tabbed_tab_strip)).setViewPager(viewPager);

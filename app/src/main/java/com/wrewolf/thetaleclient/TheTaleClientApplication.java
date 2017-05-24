@@ -10,8 +10,6 @@ import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.map.MapUtils;
 import com.wrewolf.thetaleclient.util.onscreen.OnscreenStateWatcher;
 
-import net.grandcentrix.tray.core.TrayStorage;
-
 /**
  * @author Hamster
  * @since 08.10.2014

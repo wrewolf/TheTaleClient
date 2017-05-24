@@ -19,17 +19,14 @@ import com.wrewolf.thetaleclient.DataViewMode;
 import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.TheTaleClientApplication;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
-import com.wrewolf.thetaleclient.api.CommonResponseCallback;
 import com.wrewolf.thetaleclient.api.dictionary.QuestType;
 import com.wrewolf.thetaleclient.api.model.QuestActorInfo;
 import com.wrewolf.thetaleclient.api.model.QuestChoiceInfo;
 import com.wrewolf.thetaleclient.api.model.QuestStepInfo;
 import com.wrewolf.thetaleclient.api.request.GameInfoRequest;
-import com.wrewolf.thetaleclient.api.request.MapRequest;
 import com.wrewolf.thetaleclient.api.request.QuestChoiceRequest;
 import com.wrewolf.thetaleclient.api.response.CommonResponse;
 import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
-import com.wrewolf.thetaleclient.api.response.MapResponse;
 import com.wrewolf.thetaleclient.util.DialogUtils;
 import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.RequestUtils;
@@ -48,9 +45,7 @@ public class QuestsFragment extends WrapperFragment {
 
     private LayoutInflater layoutInflater;
 
-    private View rootView;
-
-    private ViewGroup container;
+  private ViewGroup container;
 
     private final Map<TextView, Integer> actorNames = new HashMap<>();
 
@@ -60,7 +55,7 @@ public class QuestsFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-        rootView = layoutInflater.inflate(R.layout.fragment_quests, container, false);
+      View rootView = layoutInflater.inflate(R.layout.fragment_quests, container, false);
 
         this.container = (ViewGroup) rootView.findViewById(R.id.quests_container);
 
@@ -203,24 +198,25 @@ public class QuestsFragment extends WrapperFragment {
 
                 // add town name to quest person actors
                 if(actorNames.size() > 0) {
-                    new MapRequest(response.mapVersion).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
-                        @Override
-                        public void processResponse(MapResponse response) {
-                            for (final Map.Entry<TextView, Integer> actorNameEntry : actorNames.entrySet()) {
-                                final Spannable placeText = new SpannableString(String.format(" (%s)", response.places.get(actorNameEntry.getValue()).name));
-                                placeText.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.game_additional_info)),
-                                        0, placeText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                                final TextView actorName = actorNameEntry.getKey();
-                                actorName.setText(TextUtils.concat(actorName.getText(), placeText));
-                            }
-                        }
-
-                        @Override
-                        public void processError(String error) {
-                            // do nothing
-                        }
-                    }, QuestsFragment.this));
+                    // TODO: Починить отображение. Новое API нужно использовать
+//                    new MapRequest(response.mapVersion).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+//                        @Override
+//                        public void processResponse(MapResponse response) {
+//                            for (final Map.Entry<TextView, Integer> actorNameEntry : actorNames.entrySet()) {
+//                                final Spannable placeText = new SpannableString(String.format(" (%s)", response.places.get(actorNameEntry.getValue()).name));
+//                                placeText.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.game_additional_info)),
+//                                        0, placeText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                                final TextView actorName = actorNameEntry.getKey();
+//                                actorName.setText(TextUtils.concat(actorName.getText(), placeText));
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void processError(String error) {
+//                            // do nothing
+//                        }
+//                    }, QuestsFragment.this));
                 }
 
                 setMode(DataViewMode.DATA);

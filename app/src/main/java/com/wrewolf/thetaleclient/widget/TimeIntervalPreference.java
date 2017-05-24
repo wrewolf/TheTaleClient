@@ -80,21 +80,27 @@ public class TimeIntervalPreference extends Preference {
     }
 
     @Override
-    protected View onCreateView(ViewGroup parent) {
+    protected View onCreateView(ViewGroup parent)
+    {
+        super.onCreateView(parent);
         final LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return layoutInflater.inflate(R.layout.widget_preference_time_interval, parent, false);
     }
 
     @Override
-    protected void onBindView(View view) {
+    protected void onBindView(View view)
+    {
+        super.onBindView(view);
         textTitle = (TextView) view.findViewById(R.id.preference_time_interval_title);
         textTitle.setText(title);
 
         container = view.findViewById(R.id.preference_time_interval_container);
         enabled = (CheckBox) view.findViewById(R.id.preference_time_interval_enabled);
-        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
                 setKey(keyEnabled);
                 persistBoolean(isChecked);
                 container.setEnabled(isChecked);
@@ -105,25 +111,32 @@ public class TimeIntervalPreference extends Preference {
         isEnabled = enabled.isChecked();
         container.setEnabled(isEnabled);
 
-        view.findViewById(R.id.preference_time_interval_container_main).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.preference_time_interval_container_main).setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 enabled.performClick();
             }
         });
 
         textFrom = (TextView) view.findViewById(R.id.preference_time_interval_from);
-        textFrom.setOnClickListener(new View.OnClickListener() {
+        textFrom.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(!isEnabled) {
+            public void onClick(View v)
+            {
+                if (!isEnabled)
+                {
                     enabled.setChecked(true);
                 }
 
                 final TimePickDialog dialog = new TimePickDialog();
-                dialog.setTimeSelectionListener(new TimePickDialog.TimeSelectionListener() {
+                dialog.setTimeSelectionListener(new TimePickDialog.TimeSelectionListener()
+                {
                     @Override
-                    public void onTimeSelected(int hourOfDay, int minute) {
+                    public void onTimeSelected(int hourOfDay, int minute)
+                    {
                         setKey(keyFromHour);
                         persistInt(hourOfDay);
                         setKey(keyFromMinute);
@@ -135,21 +148,26 @@ public class TimeIntervalPreference extends Preference {
             }
         });
         textFrom.setText(getTimeText(
-                PreferencesManager.getNotificationNighttimeFromHour(),
-                PreferencesManager.getNotificationNighttimeFromMinute()));
+            PreferencesManager.getNotificationNighttimeFromHour(),
+            PreferencesManager.getNotificationNighttimeFromMinute()));
 
         textTo = (TextView) view.findViewById(R.id.preference_time_interval_to);
-        textTo.setOnClickListener(new View.OnClickListener() {
+        textTo.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(!isEnabled) {
+            public void onClick(View v)
+            {
+                if (!isEnabled)
+                {
                     enabled.setChecked(true);
                 }
 
                 final TimePickDialog dialog = new TimePickDialog();
-                dialog.setTimeSelectionListener(new TimePickDialog.TimeSelectionListener() {
+                dialog.setTimeSelectionListener(new TimePickDialog.TimeSelectionListener()
+                {
                     @Override
-                    public void onTimeSelected(int hourOfDay, int minute) {
+                    public void onTimeSelected(int hourOfDay, int minute)
+                    {
                         setKey(keyToHour);
                         persistInt(hourOfDay);
                         setKey(keyToMinute);
@@ -161,8 +179,8 @@ public class TimeIntervalPreference extends Preference {
             }
         });
         textTo.setText(getTimeText(
-                PreferencesManager.getNotificationNighttimeToHour(),
-                PreferencesManager.getNotificationNighttimeToMinute()));
+            PreferencesManager.getNotificationNighttimeToHour(),
+            PreferencesManager.getNotificationNighttimeToMinute()));
     }
 
     private static String getTimeText(final int hourOfDay, final int minute) {

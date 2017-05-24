@@ -24,23 +24,23 @@ public class MapResponse {
 
     public final String formatVersion;
     public final String mapVersion;
-    public final Map<Integer, MapPlaceInfo> places;
+    public final Map<Integer, MapPlaceInfo> places= new HashMap<>(0) ;
     public final Map<Integer, RoadInfo> roads;
     public final int width;
     public final int height;
     public final List<List<List<SpriteTileInfo>>> tiles;
 
     public MapResponse(final String response) throws JSONException {
-        final JSONObject json = new JSONObject(response);
+        final JSONObject json = new JSONObject(response).getJSONObject("data").getJSONObject("region");
 
         formatVersion = json.getString("format_version");
 
-        final JSONObject placesJson = json.getJSONObject("places");
-        places = new HashMap<>(placesJson.length());
-        for(final Iterator<String> placesIterator = placesJson.keys(); placesIterator.hasNext();) {
-            final String key = placesIterator.next();
-            places.put(Integer.decode(key), ObjectUtils.getModelFromJson(MapPlaceInfo.class, placesJson.getJSONObject(key)));
-        }
+//        final JSONObject placesJson = json.getJSONObject("places");
+//        places = new HashMap<>(placesJson.length());
+//        for(final Iterator<String> placesIterator = placesJson.keys(); placesIterator.hasNext();) {
+//            final String key = placesIterator.next();
+//            places.put(Integer.decode(key), ObjectUtils.getModelFromJson(MapPlaceInfo.class, placesJson.getJSONObject(key)));
+//        }
 
         final JSONObject roadsJson = json.getJSONObject("roads");
         roads = new HashMap<>(roadsJson.length());

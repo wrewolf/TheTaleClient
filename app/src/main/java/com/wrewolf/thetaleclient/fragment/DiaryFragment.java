@@ -9,7 +9,9 @@ import com.wrewolf.thetaleclient.DataViewMode;
 import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.model.DiaryEntry;
+import com.wrewolf.thetaleclient.api.request.DiaryRequest;
 import com.wrewolf.thetaleclient.api.request.GameInfoRequest;
+import com.wrewolf.thetaleclient.api.response.DiaryResponse;
 import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
 import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.RequestUtils;
@@ -39,39 +41,35 @@ public class DiaryFragment extends WrapperFragment {
     public void refresh(final boolean isGlobal) {
         super.refresh(isGlobal);
 
-        final ApiResponseCallback<GameInfoResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<GameInfoResponse>() {
+        final ApiResponseCallback<DiaryResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<DiaryResponse>() {
             @Override
-            public void processResponse(GameInfoResponse response) {
+            public void processResponse(DiaryResponse response) {
                 diaryContainer.removeAllViews();
-                for(int i = response.account.hero.diary.size() - 1; i >= 0; i--) {
-                    final DiaryEntry diaryEntry = response.account.hero.diary.get(i);
+
+                for(int i = response.diary.size() - 1; i >= 0; i--) {
+                    final DiaryEntry diaryEntry = response.diary.get(i);
                     final View diaryEntryView = layoutInflater.inflate(R.layout.item_diary, diaryContainer, false);
                     UiUtils.setText(
                             diaryEntryView.findViewById(R.id.diary_place),
-                            diaryEntry.place);
+                            diaryEntry.position);
                     UiUtils.setText(
                             diaryEntryView.findViewById(R.id.diary_time),
-                            String.format("%s %s", diaryEntry.time, diaryEntry.date));
+                            String.format("%s %s", diaryEntry.game_time, diaryEntry.game_date));
                     UiUtils.setText(
                             diaryEntryView.findViewById(R.id.diary_text),
-                            diaryEntry.text);
+                            diaryEntry.message);
                     diaryContainer.addView(diaryEntryView);
                 }
                 setMode(DataViewMode.DATA);
             }
 
             @Override
-            public void processError(GameInfoResponse response) {
+            public void processError(DiaryResponse response) {
                 setError(response.errorMessage);
             }
         }, this);
 
-        final int watchingAccountId = PreferencesManager.getWatchingAccountId();
-        if(watchingAccountId == 0) {
-            new GameInfoRequest(true).execute(callback, true);
-        } else {
-            new GameInfoRequest(true).execute(watchingAccountId, callback, true);
-        }
+            new DiaryRequest().execute(callback);
     }
 
 }

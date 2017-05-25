@@ -9,18 +9,22 @@ import org.json.JSONObject;
  */
 public class DiaryEntry {
 
+    public final String message;
+    public final String position;
+    public final String game_time;
+    public final String game_date;
+    public final String type;
+    public final String variables;
     public final int timestamp;
-    public final String place;
-    public final String time;
-    public final String date;
-    public final String text;
 
     public DiaryEntry(final JSONObject json) throws JSONException {
+        message = json.getString("message");
+        position = json.getString("position");
+        game_time = json.getString("game_time");
+        game_date = json.getString("game_date");
+        type = json.getString("type");
+        variables =json.getString("variables");
         timestamp = json.getInt("timestamp");
-        place = json.getString("place");
-        time = json.getString("time");
-        date = json.getString("date");
-        text = json.getString("text");
     }
 
 }

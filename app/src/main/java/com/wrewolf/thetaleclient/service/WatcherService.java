@@ -108,7 +108,7 @@ public class WatcherService extends Service
                 if (diaryEntry.timestamp > lastDiaryTimestamp)
                 {
                   TextToSpeechUtils.speak(String.format("%s, %s.\n%s",
-                                                        diaryEntry.date, diaryEntry.time, diaryEntry.text));
+                                                        diaryEntry.game_date, diaryEntry.game_time, diaryEntry.message));
                 }
               }
             }

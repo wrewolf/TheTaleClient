@@ -6,7 +6,7 @@
 /app/src/main/res/raw
 build
 *.iml
-
+/app/release
 crashlytics.properties
 com_crashlytics_export_strings.xml
 crashlytics-build.properties

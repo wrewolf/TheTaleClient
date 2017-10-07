@@ -2,8 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.firebase-crash'
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0-rc2"
+    compileSdkVersion 26
     def versionPropsFile = file('version.properties')
 
     if (versionPropsFile.canRead()) {
@@ -17,14 +16,14 @@ android {
 
         defaultConfig {
             applicationId "com.wrewolf.thetaleclient"
-            minSdkVersion 19
-            targetSdkVersion 25
+            minSdkVersion 15
+            targetSdkVersion 26
             versionCode code
             versionName "1.6.9." + code + "_beta"
             resValue "string", "tray__authority", "${applicationId}.tray"
         }
     } else {
-        throw new GradleException("Could not read version.properties!")
+        throw new Exception("Could not read version.properties!")
     }
 
     buildTypes {
@@ -50,8 +49,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {
@@ -61,29 +60,31 @@ android {
 }
 
 dependencies {
-    // latest versions of libraries as of 15.05.2017
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.google.firebase:firebase-core:10.2.6'
-    compile 'com.google.firebase:firebase-messaging:10.2.6'
-    compile 'com.google.firebase:firebase-crash:10.2.6'
 
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'net.grandcentrix.tray:tray:0.11.1'
+    implementation 'com.android.support:multidex:1.0.2'
+    // latest versions of libraries as of 15.05.2017
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.google.firebase:firebase-core:11.4.2'
+    implementation 'com.google.firebase:firebase-messaging:11.4.2'
+    implementation 'com.google.firebase:firebase-crash:11.4.2'
+
+    implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation 'net.grandcentrix.tray:tray:0.11.1'
 
     // https://github.com/astuetz/PagerSlidingTabStrip
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    implementation 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     // https://github.com/kolavar/android-support-v4-preferencefragment
-    compile project(':android-support-v4-preferencefragment')
+    implementation project(':android-support-v4-preferencefragment')
 
     // https://github.com/chrisbanes/PhotoView
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
 
     // https://github.com/jhy/jsoup
-    compile 'org.jsoup:jsoup:1.10.2'
+    implementation 'org.jsoup:jsoup:1.10.2'
 
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //Dagger
 //    compile 'com.google.dagger:dagger-android:2.x'
@@ -92,16 +93,16 @@ dependencies {
 //    provided 'javax.annotation:jsr250-api:1.0'
 
     //Retrofit
-//    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-
+//    compile 'com.google.code.gson:gson:2.8.0'
+//    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+//    compile 'com.squareup.retrofit2:retrofit:2.3.0'
     //OkHttp
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.0'
-    compile 'com.squareup.okio:okio:1.13.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.squareup.okhttp3:okhttp:3.8.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.8.0'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     //Gson
-//    compile 'com.google.code.gson:gson:2.8.0'
 //    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
 
     //Butter Knife
@@ -121,4 +122,7 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 repositories {
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://maven.google.com' }
+    jcenter()
 }

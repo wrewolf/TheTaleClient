@@ -86,6 +86,8 @@
   public <methods>;
 }
 
+-keep class org.jsoup.**
+
 -dontwarn android.security.NetworkSecurityPolicy
 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.

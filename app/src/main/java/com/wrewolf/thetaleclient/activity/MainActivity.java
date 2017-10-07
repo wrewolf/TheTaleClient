@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +39,8 @@ import com.wrewolf.thetaleclient.util.UiUtils;
 import com.wrewolf.thetaleclient.util.WebsiteUtils;
 import com.wrewolf.thetaleclient.util.onscreen.OnscreenPart;
 
-public class MainActivity extends ActionBarActivity
+
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String KEY_GAME_TAB_INDEX = "KEY_GAME_TAB_INDEX";
@@ -90,6 +91,12 @@ public class MainActivity extends ActionBarActivity
             tabIndex = savedInstanceState.getInt(KEY_DRAWER_TAB_INDEX, tabIndex);
         }
         onNavigationDrawerItemSelected(DrawerItem.values()[tabIndex]);
+
+//        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
+//        Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl("http://the-tale.org")
+//            .client(okHttpClient)
+//            .build();
     }
 
     @Override

@@ -30,10 +30,10 @@ public class AbilityUseRequest extends AbstractApiRequest<CommonResponse> {
             case ARENA_ACCEPT:
                 getParams.put("battle", String.valueOf(targetId));
                 break;
-
-            case BUILDING_REPAIR:
-                getParams.put("building", String.valueOf(targetId));
-                break;
+// TODO: разобраться куда пропало
+//            case BUILDING_REPAIR:
+//                getParams.put("building", String.valueOf(targetId));
+//                break;
         }
         execute(getParams, null, callback);
     }

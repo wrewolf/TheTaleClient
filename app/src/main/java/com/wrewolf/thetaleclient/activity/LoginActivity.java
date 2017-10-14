@@ -70,7 +70,7 @@ public class LoginActivity extends FragmentActivity {
             new ThirdPartyAuthStateRequest().execute(new ApiResponseCallback<ThirdPartyAuthStateResponse>() {
                 @Override
                 public void processResponse(ThirdPartyAuthStateResponse response) {
-                    switch(response.authState) {
+                    switch (response.authState) {
                         case NOT_REQUESTED:
                         case REJECT:
                             isThirdPartyAuthInProgress = false;
@@ -102,7 +102,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             // TODO: Вставить FireBase
             // Crashlytics.start(this);
         }
@@ -176,7 +176,7 @@ public class LoginActivity extends FragmentActivity {
         super.onResume();
         PreferencesManager.setShouldExit(false);
         AppWidgetHelper.update(this, DataViewMode.LOADING, null);
-        if(isThirdPartyAuthInProgress) {
+        if (isThirdPartyAuthInProgress) {
             thirdPartyAuthStateRequester.run();
         } else {
             startRequestInit();
@@ -192,7 +192,7 @@ public class LoginActivity extends FragmentActivity {
                 new GameInfoRequest(false).execute(new ApiResponseCallback<GameInfoResponse>() {
                     @Override
                     public void processResponse(GameInfoResponse response) {
-                        if(response.account == null) {
+                        if (response.account == null) {
                             setLoginContainersVisibility(true);
                             setMode(DataViewMode.DATA);
                             AppWidgetHelper.updateWithError(LoginActivity.this, getString(R.string.game_not_authorized));
@@ -222,7 +222,11 @@ public class LoginActivity extends FragmentActivity {
                         startRequestInit();
                     }
                 });
-                setError(response.errorMessage);
+                if (response == null) {
+                    setError("Ошибка NULL...");
+                } else {
+                    setError(response.errorMessage);
+                }
             }
         });
     }
@@ -288,7 +292,7 @@ public class LoginActivity extends FragmentActivity {
                         }
                         if (response.errorsPassword != null) {
                             UiUtils.setText(textErrorPassword, TextUtils.join("\n", response.errorsPassword));
-                            if(response.errorsLogin == null) {
+                            if (response.errorsLogin == null) {
                                 textPassword.requestFocus();
                             } else {
                                 textLogin.requestFocus();
@@ -300,7 +304,7 @@ public class LoginActivity extends FragmentActivity {
 
     private void authorize(final String login, final String password) {
         RequestCacheManager.invalidate();
-        if(wasError) {
+        if (wasError) {
             new InfoRequest().execute(new ApiResponseCallback<InfoResponse>() {
                 @Override
                 public void processResponse(InfoResponse response) {
@@ -373,7 +377,7 @@ public class LoginActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if(isThirdPartyAuthInProgress) {
+        if (isThirdPartyAuthInProgress) {
             isThirdPartyAuthInProgress = false;
             handler.removeCallbacks(thirdPartyAuthStateRequester);
             setLoginContainersVisibility(true);

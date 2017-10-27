@@ -20,14 +20,22 @@ public class CardsInfo {
     public Integer cardHelpBarrier = 0;
 
     public CardsInfo(final JSONObject json) throws JSONException {
-        final JSONArray cardsJson = json.getJSONArray("cards");
-        final int size = cardsJson.length();
-        cards = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            final CardInfo card = ObjectUtils.getModelFromJson(CardInfo.class, cardsJson.getJSONObject(i));
-            if (card != null) {
-                cards.add(card);
+        if (json.has("help_barrier"))
+            cardHelpBarrier = json.getInt("help_barrier");
+        if (json.has("help_count"))
+            cardHelpCurrent = json.getInt("help_count");
+        if (json.has("cards")) {
+            final JSONArray cardsJson = json.getJSONArray("cards");
+            final int size = cardsJson.length();
+            cards = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                final CardInfo card = ObjectUtils.getModelFromJson(CardInfo.class, cardsJson.getJSONObject(i));
+                if (card != null) {
+                    cards.add(card);
+                }
             }
+        } else {
+            cards = new ArrayList<>(0);
         }
     }
 }

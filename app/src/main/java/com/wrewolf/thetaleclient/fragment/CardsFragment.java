@@ -20,9 +20,11 @@ import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.dictionary.CardRarity;
 import com.wrewolf.thetaleclient.api.model.CardInfo;
+import com.wrewolf.thetaleclient.api.request.CardsRequest;
 import com.wrewolf.thetaleclient.api.request.CombineCardsRequest;
 import com.wrewolf.thetaleclient.api.request.GameInfoRequest;
 import com.wrewolf.thetaleclient.api.request.TakeCardRequest;
+import com.wrewolf.thetaleclient.api.response.CardsResponse;
 import com.wrewolf.thetaleclient.api.response.CombineCardsResponse;
 import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
 import com.wrewolf.thetaleclient.api.response.TakeCardResponse;
@@ -33,6 +35,8 @@ import com.wrewolf.thetaleclient.util.RequestUtils;
 import com.wrewolf.thetaleclient.util.UiUtils;
 import com.wrewolf.thetaleclient.widget.RequestActionView;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,6 +44,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author Hamster
@@ -49,19 +57,30 @@ public class CardsFragment extends WrapperFragment {
 
     private LayoutInflater layoutInflater;
 
-  private View helpCounterContainer;
-    private TextView helpCounter;
-    private ProgressBar helpCounterProgress;
-    private RequestActionView helpTakeCardWidget;
+    @BindView(R.id.cards_container_help_to_next_card)
+    View helpCounterContainer;
+    @BindView(R.id.cards_help_counter)
+    TextView helpCounter;
+    @BindView(R.id.cards_help_counter_progress)
+    ProgressBar helpCounterProgress;
+    @BindView(R.id.cards_take_card)
+    RequestActionView helpTakeCardWidget;
+    @BindView(R.id.cards_container)
+    ViewGroup cardsContainer;
+    @BindView(R.id.cards_combine_action_start)
+    View combineActionStart;
+    @BindView(R.id.cards_combine_actions)
+    View combineActions;
+    @BindView(R.id.cards_combine_action_confirm)
+    View combineActionConfirm;
+    @BindView(R.id.cards_combine_action_cancel)
+    View combineActionCancel;
+    @BindView(R.id.cards_combine_container)
+    View combineContainer;
+    @BindView(R.id.cards_combine_list)
+    ViewGroup combineList;
 
-    private ViewGroup cardsContainer;
-
-    private View combineActionStart;
-    private View combineActions;
-    private View combineActionConfirm;
-    private View combineActionCancel;
-    private View combineContainer;
-    private ViewGroup combineList;
+    private Unbinder unbinder;
 
     private int cardTextHeight;
     private Collection<CardInfo> cardsListInitial;
@@ -72,21 +91,8 @@ public class CardsFragment extends WrapperFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
-      View rootView = inflater.inflate(R.layout.fragment_cards, container, false);
-
-        helpCounterContainer = rootView.findViewById(R.id.cards_container_help_to_next_card);
-        helpCounter = (TextView) rootView.findViewById(R.id.cards_help_counter);
-        helpCounterProgress = (ProgressBar) rootView.findViewById(R.id.cards_help_counter_progress);
-        helpTakeCardWidget = (RequestActionView) rootView.findViewById(R.id.cards_take_card);
-
-        cardsContainer = (ViewGroup) rootView.findViewById(R.id.cards_container);
-
-        combineActionStart = rootView.findViewById(R.id.cards_combine_action_start);
-        combineActions = rootView.findViewById(R.id.cards_combine_actions);
-        combineActionConfirm = rootView.findViewById(R.id.cards_combine_action_confirm);
-        combineActionCancel = rootView.findViewById(R.id.cards_combine_action_cancel);
-        combineContainer = rootView.findViewById(R.id.cards_combine_container);
-        combineList = (ViewGroup) rootView.findViewById(R.id.cards_combine_list);
+        View rootView = inflater.inflate(R.layout.fragment_cards, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
 
         return wrapView(layoutInflater, rootView);
     }
@@ -95,7 +101,7 @@ public class CardsFragment extends WrapperFragment {
     public void refresh(final boolean isGlobal) {
         super.refresh(isGlobal);
 
-        if(isGlobal) {
+        if (isGlobal) {
             isCombining = false;
             combiningCardsList = new ArrayList<>();
             updateCombineViews();
@@ -105,8 +111,8 @@ public class CardsFragment extends WrapperFragment {
             @Override
             public void onGlobalLayout() {
                 final int height = combineActionStart.getHeight();
-                if(height > 0) {
-                    if(isAdded()) {
+                if (height > 0) {
+                    if (isAdded()) {
                         cardTextHeight = (int) (height
                                 - 2 * getResources().getDimension(R.dimen.request_action_padding)
                                 + 2 * getResources().getDimension(R.dimen.game_card_margins_vertical));
@@ -116,64 +122,60 @@ public class CardsFragment extends WrapperFragment {
             }
         });
 
-        final ApiResponseCallback<GameInfoResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<GameInfoResponse>() {
+        final ApiResponseCallback<CardsResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<CardsResponse>() {
             @Override
-            public void processResponse(final GameInfoResponse response) {
-                if(!response.account.isOwnInfo) {
-                    setError(getString(R.string.game_cards_unavailable_foreign));
-                    return;
-                }
+            public void processResponse(final CardsResponse response) {
 
-                if(response.account.hero.cards.cardHelpCurrent >= response.account.hero.cards.cardHelpBarrier) {
-                    helpCounterContainer.setVisibility(View.GONE);
-                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
-                    helpTakeCardWidget.setVisibility(View.VISIBLE);
-
-                    helpTakeCardWidget.setActionClickListener(new Runnable() {
-                        @Override
-                        public void run() {
-                            new TakeCardRequest().execute(RequestUtils.wrapCallback(new ApiResponseCallback<TakeCardResponse>() {
-                                @Override
-                                public void processResponse(TakeCardResponse response) {
-                                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
-                                    DialogUtils.showCardInfoDialog(getChildFragmentManager(),
-                                            getString(R.string.game_card_take_result),
-                                            response.card,
-                                            new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    refresh(true);
-                                                }
-                                            });
-                                }
-
-                                @Override
-                                public void processError(TakeCardResponse response) {
-                                    helpTakeCardWidget.setErrorText(response.errorMessage);
-                                }
-                            }, CardsFragment.this));
-                        }
-                    });
-                } else {
-                    helpCounterContainer.setVisibility(View.VISIBLE);
-                    helpTakeCardWidget.setVisibility(View.GONE);
-
-                    helpCounterProgress.setMax(response.account.hero.cards.cardHelpBarrier);
-                    helpCounterProgress.setProgress(response.account.hero.cards.cardHelpCurrent);
-                    helpCounter.setText(getString(R.string.game_help_progress_to_next_card,
-                            response.account.hero.cards.cardHelpCurrent,
-                            response.account.hero.cards.cardHelpBarrier));
-                    helpCounter.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            if(isAdded()) {
-                                UiUtils.setHeight(helpCounterProgress,
-                                        (int) (helpCounter.getHeight() + 2 * getResources().getDimension(R.dimen.game_info_bar_padding)));
-                            }
-                            UiUtils.removeGlobalLayoutListener(helpCounter, this);
-                        }
-                    });
-                }
+//                if (response.account.hero.cards.cardHelpCurrent >= response.account.hero.cards.cardHelpBarrier) {
+//                    helpCounterContainer.setVisibility(View.GONE);
+//                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
+//                    helpTakeCardWidget.setVisibility(View.VISIBLE);
+//
+//                    helpTakeCardWidget.setActionClickListener(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            new TakeCardRequest().execute(RequestUtils.wrapCallback(new ApiResponseCallback<TakeCardResponse>() {
+//                                @Override
+//                                public void processResponse(TakeCardResponse response) {
+//                                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
+//                                    DialogUtils.showCardInfoDialog(getChildFragmentManager(),
+//                                            getString(R.string.game_card_take_result),
+//                                            response.card,
+//                                            new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    refresh(true);
+//                                                }
+//                                            });
+//                                }
+//
+//                                @Override
+//                                public void processError(TakeCardResponse response) {
+//                                    helpTakeCardWidget.setErrorText(response.errorMessage);
+//                                }
+//                            }, CardsFragment.this));
+//                        }
+//                    });
+//                } else {
+//                    helpCounterContainer.setVisibility(View.VISIBLE);
+//                    helpTakeCardWidget.setVisibility(View.GONE);
+//
+//                    helpCounterProgress.setMax(0); // response.account.hero.cards.cardHelpBarrier
+//                    helpCounterProgress.setProgress(0); //response.account.hero.cards.cardHelpCurrent
+//                    helpCounter.setText(getString(R.string.game_help_progress_to_next_card,
+//                            response.account.hero.cards.cardHelpCurrent,
+//                            response.account.hero.cards.cardHelpBarrier));
+//                    helpCounter.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                        @Override
+//                        public void onGlobalLayout() {
+//                            if (isAdded()) {
+//                                UiUtils.setHeight(helpCounterProgress,
+//                                        (int) (helpCounter.getHeight() + 2 * getResources().getDimension(R.dimen.game_info_bar_padding)));
+//                            }
+//                            UiUtils.removeGlobalLayoutListener(helpCounter, this);
+//                        }
+//                    });
+//                }
 
                 combineActionStart.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -183,9 +185,9 @@ public class CardsFragment extends WrapperFragment {
                     }
                 });
 
-                cardsListInitial = response.account.hero.cards.cards;
+                cardsListInitial = response.cards.cards;
                 cardsContainer.removeAllViews();
-                final Map<CardInfo, Integer> cards = ObjectUtils.getItemsCountList(response.account.hero.cards.cards,
+                final Map<CardInfo, Integer> cards = ObjectUtils.getItemsCountList(response.cards.cards,
                         new Comparator<CardInfo>() {
                             @Override
                             public int compare(CardInfo lhs, CardInfo rhs) {
@@ -193,17 +195,17 @@ public class CardsFragment extends WrapperFragment {
                             }
                         });
                 cardsInitial = cards;
-                for(final Map.Entry<CardInfo, Integer> cardsEntry : cards.entrySet()) {
+                for (final Map.Entry<CardInfo, Integer> cardsEntry : cards.entrySet()) {
                     final CardInfo card = cardsEntry.getKey();
                     final int count = cardsEntry.getValue();
                     final View cardEntryView = getCardEntryView(layoutInflater, card, count, false);
                     cardEntryView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(isCombining) {
+                            if (isCombining) {
                                 updateCombineList(cardEntryView, card, true);
                             } else {
-                                if(card.type != null) {
+                                if (card.type != null) {
                                     DialogUtils.showCardUseDialog(
                                             getChildFragmentManager(),
                                             getString(R.string.game_card_use),
@@ -230,21 +232,21 @@ public class CardsFragment extends WrapperFragment {
             }
 
             @Override
-            public void processError(GameInfoResponse response) {
+            public void processError(CardsResponse response) {
                 setError(response.errorMessage);
             }
         }, this);
 
         final int watchingAccountId = PreferencesManager.getWatchingAccountId();
-        if(watchingAccountId == 0) {
-            new GameInfoRequest(true).execute(callback, true);
+        if (watchingAccountId == 0) {
+            new CardsRequest().execute(callback);
         } else {
-            new GameInfoRequest(true).execute(watchingAccountId, callback, true);
+            new CardsRequest().execute(watchingAccountId, callback);
         }
     }
 
     private void updateCombineViews() {
-        if(isCombining) {
+        if (isCombining) {
             combineActionStart.setVisibility(View.GONE);
             combineActions.setVisibility(View.VISIBLE);
             combineContainer.setVisibility(View.VISIBLE);
@@ -270,10 +272,10 @@ public class CardsFragment extends WrapperFragment {
 
                     final Collection<CardInfo> cardsList = new ArrayList<>(cardsListInitial);
                     final List<Integer> cardIds = new ArrayList<>();
-                    for(final Pair<CardInfo, View> pair : combiningCardsList) {
-                        for(final Iterator<CardInfo> iterator = cardsList.iterator(); iterator.hasNext();) {
+                    for (final Pair<CardInfo, View> pair : combiningCardsList) {
+                        for (final Iterator<CardInfo> iterator = cardsList.iterator(); iterator.hasNext(); ) {
                             final CardInfo card = iterator.next();
-                            if(pair.first.equals(card)) {
+                            if (pair.first.equals(card)) {
                                 iterator.remove();
                                 cardIds.add(card.id);
                                 break;
@@ -322,7 +324,7 @@ public class CardsFragment extends WrapperFragment {
             }
         });
 
-        for(final Pair<CardInfo, View> pair : combiningCardsList) {
+        for (final Pair<CardInfo, View> pair : combiningCardsList) {
             final View combiningCardView = getCardEntryView(layoutInflater, pair.first, 1, true);
             combiningCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -336,21 +338,21 @@ public class CardsFragment extends WrapperFragment {
 
     private void updateCombineList(final View mainCardView, final CardInfo card, final boolean isAdded) {
         int combineCardCount = cardsInitial.get(card);
-        for(final Pair<CardInfo, View> pair : combiningCardsList) {
-            if(pair.first.equals(card)) {
+        for (final Pair<CardInfo, View> pair : combiningCardsList) {
+            if (pair.first.equals(card)) {
                 combineCardCount--;
             }
         }
 
-        if(isAdded) {
-            if(combineCardCount > 0) {
+        if (isAdded) {
+            if (combineCardCount > 0) {
                 combiningCardsList.add(Pair.create(card, mainCardView));
                 combineCardCount--;
             }
         } else {
-            for(final Iterator<Pair<CardInfo, View>> iterator = combiningCardsList.iterator(); iterator.hasNext();) {
+            for (final Iterator<Pair<CardInfo, View>> iterator = combiningCardsList.iterator(); iterator.hasNext(); ) {
                 final Pair<CardInfo, View> pair = iterator.next();
-                if(pair.first.equals(card) && (pair.second == mainCardView)) {
+                if (pair.first.equals(card) && (pair.second == mainCardView)) {
                     iterator.remove();
                     break;
                 }
@@ -363,7 +365,7 @@ public class CardsFragment extends WrapperFragment {
     }
 
     private void updateCardEntryView(final View cardEntryView, final CardInfo card, final int count, final boolean isShort) {
-        if(count > 0) {
+        if (count > 0) {
             cardEntryView.setVisibility(View.VISIBLE);
         } else {
             cardEntryView.setVisibility(View.GONE);
@@ -374,7 +376,7 @@ public class CardsFragment extends WrapperFragment {
         final Spannable cardName = new SpannableString(card.name);
         cardName.setSpan(new ForegroundColorSpan(getResources().getColor(rarity.getColorResId())),
                 0, cardName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if(isShort) {
+        if (isShort) {
             ((TextView) cardEntryView.findViewById(R.id.card_name)).setText(cardName);
             cardEntryView.findViewById(R.id.card_description).setVisibility(View.GONE);
             cardEntryView.findViewById(R.id.card_tradable).setVisibility(View.GONE);
@@ -382,7 +384,7 @@ public class CardsFragment extends WrapperFragment {
             ((TextView) cardEntryView.findViewById(R.id.card_name)).setText(
                     TextUtils.concat(cardName, " x ", String.valueOf(count)));
             final TextView cardDescription = (TextView) cardEntryView.findViewById(R.id.card_description);
-            if(card.type == null) {
+            if (card.type == null) {
                 cardDescription.setVisibility(View.GONE);
             } else {
                 cardDescription.setVisibility(View.VISIBLE);
@@ -398,4 +400,9 @@ public class CardsFragment extends WrapperFragment {
         return cardEntryView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

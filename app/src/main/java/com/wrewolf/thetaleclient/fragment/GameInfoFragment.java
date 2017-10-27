@@ -286,8 +286,8 @@ public class GameInfoFragment extends WrapperFragment {
                             getString(R.string.game_help_to_next_card),
                             getString(
                                     R.string.game_help_progress_to_next_card,
-                                    gameInfoResponse.account.hero.cards.cardHelpCurrent,
-                                    gameInfoResponse.account.hero.cards.cardHelpBarrier)))
+                                    0,
+                                    0)))
                             .append("\n");
                 }
                 additionalInfoStringBuilder.append(UiUtils.getInfoItem(

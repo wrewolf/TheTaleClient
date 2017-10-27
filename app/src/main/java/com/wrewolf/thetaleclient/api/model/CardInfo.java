@@ -19,8 +19,10 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
     public final int id;
     public final CardType type;
     public final CardRarity rarity;
+    public final String fullType;
     public final String name;
     public final boolean isTradable;
+    public final boolean inStorage;
 
     public CardInfo(final JSONObject json) throws JSONException {
         id = json.getInt("uid");
@@ -28,6 +30,8 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
         rarity = ObjectUtils.getEnumForCode(CardRarity.class, json.getInt("rarity"));
         name = json.getString("name");
         isTradable = json.getBoolean("auction");
+        fullType = json.getString("full_type");
+        inStorage = json.getBoolean("in_storage");
     }
 
     @Override
@@ -79,7 +83,6 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
     }
 
     // parcelable stuff
-
     private CardInfo(final Parcel in) {
         id = in.readInt();
 
@@ -89,6 +92,8 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
         rarity = CardRarity.values()[in.readInt()];
         name = in.readString();
         isTradable = in.readInt() == 1;
+        fullType = in.readString();
+        inStorage = in.readInt() == 1;
     }
 
     @Override
@@ -103,6 +108,8 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
         out.writeInt(rarity.ordinal());
         out.writeString(name);
         out.writeInt(isTradable ? 1 : 0);
+        out.writeString(fullType);
+        out.writeInt(inStorage ? 1 : 0);
     }
 
     public static final Parcelable.Creator<CardInfo> CREATOR = new Parcelable.Creator<CardInfo>() {

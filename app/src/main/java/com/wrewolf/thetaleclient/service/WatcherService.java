@@ -15,8 +15,10 @@ import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.dictionary.Action;
 import com.wrewolf.thetaleclient.api.model.DiaryEntry;
 import com.wrewolf.thetaleclient.api.request.AbilityUseRequest;
+import com.wrewolf.thetaleclient.api.request.DiaryRequest;
 import com.wrewolf.thetaleclient.api.request.GameInfoRequest;
 import com.wrewolf.thetaleclient.api.response.CommonResponse;
+import com.wrewolf.thetaleclient.api.response.DiaryResponse;
 import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
 import com.wrewolf.thetaleclient.service.autohelper.Autohelper;
 import com.wrewolf.thetaleclient.service.autohelper.CompanionCareAutohelper;
@@ -96,27 +98,46 @@ public class WatcherService extends Service
               new AbilityUseRequest(Action.HELP).execute(0, null);
             }
 
-            final int diarySize = response.account.hero.diary.size();
-            final int lastDiaryTimestamp = PreferencesManager.getLastDiaryEntryRead();
-            if (PreferencesManager.isDiaryReadAloudEnabled()
-                && TheTaleClientApplication.getOnscreenStateWatcher().isOnscreen(OnscreenPart.MAIN)
-                && (lastDiaryTimestamp > 0))
-            {
-              for (int i = 0; i < diarySize; i++)
-              {
-                final DiaryEntry diaryEntry = response.account.hero.diary.get(i);
-                if (diaryEntry.timestamp > lastDiaryTimestamp)
-                {
-                  TextToSpeechUtils.speak(String.format("%s, %s.\n%s",
-                                                        diaryEntry.game_date, diaryEntry.game_time, diaryEntry.message));
+            final String lastDiaryVersion = PreferencesManager.getLastDiaryVersionRead();
+            final String actualDiaryVersion = response.account.hero.diary;
+            if (!lastDiaryVersion.equals(actualDiaryVersion)) {
+              new DiaryRequest().execute(new ApiResponseCallback<DiaryResponse>() {
+                @Override
+                public void processResponse(DiaryResponse response) {
+                  final int diarySize = response.diary.size();
+                  final int lastDiaryTimestamp = PreferencesManager.getLastDiaryEntryRead();
+                  if (PreferencesManager.isDiaryReadAloudEnabled()
+                          && TheTaleClientApplication.getOnscreenStateWatcher().isOnscreen(OnscreenPart.MAIN)
+                          && (lastDiaryTimestamp > 0))
+                  {
+                    for (int i = 0; i < diarySize; i++)
+                    {
+                      final DiaryEntry diaryEntry = response.diary.get(i);
+                      if (diaryEntry.timestamp > lastDiaryTimestamp)
+                      {
+                        TextToSpeechUtils.speak(String.format("%s, %s.\n%s",
+                                diaryEntry.game_date, diaryEntry.game_time, diaryEntry.message));
+                      }
+                    }
+                  }
+                  if (diarySize > 0)
+                  {
+                    PreferencesManager.setLastDiaryEntryRead(response.diary.get(diarySize - 1).timestamp);
+                    PreferencesManager.setLastDiaryVersionRead(actualDiaryVersion);
+                  }else{
+                    PreferencesManager.setLastDiaryEntryRead(0);
+                    PreferencesManager.setLastDiaryVersionRead("");
+                  }
                 }
-              }
-            }
-            if (diarySize > 0)
-            {
-              PreferencesManager.setLastDiaryEntryRead(response.account.hero.diary.get(diarySize - 1).timestamp);
-            }else{
-              PreferencesManager.setLastDiaryEntryRead(0);
+
+                @Override
+                public void processError(DiaryResponse response) {
+                  AppWidgetHelper.updateWithRequest(WatcherService.this);
+
+                  intervalMultiplierCurrent *= INTERVAL_MULTIPLIER;
+                  postRefresh();
+                }
+              });
             }
 
             AppWidgetHelper.update(WatcherService.this, DataViewMode.DATA, response);

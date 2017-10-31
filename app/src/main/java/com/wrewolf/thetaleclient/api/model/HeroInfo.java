@@ -23,13 +23,12 @@ public class HeroInfo {
     public final int id;
     public final int actualityTurnNumber;
     public final int spriteId;
-    public final PvpHeroInfo pvpInfo;
     public final EnergyInfo energy;
     public final Map<EquipmentType, ArtifactInfo> equipment;
     public final CardsInfo cards;
     public final Map<Integer, ArtifactInfo> bag;
     public final HeroBasicInfo basicInfo;
-    public final List<DiaryEntry> diary;
+    public final String diary;
     public final List<JournalEntry> journal;
     public final Map<Habit, HabitInfo> habits;
     public final List<List<QuestStepInfo>> quests;
@@ -41,8 +40,6 @@ public class HeroInfo {
     public final CompanionInfo companionInfo;
 
     public HeroInfo(final JSONObject json) throws JSONException {
-        pvpInfo = ObjectUtils.getModelFromJson(PvpHeroInfo.class, json.getJSONObject("pvp"));
-
         energy = ObjectUtils.getModelFromJson(EnergyInfo.class, json.getJSONObject("energy"));
 
         equipment = new HashMap<>(EquipmentType.values().length);
@@ -76,21 +73,14 @@ public class HeroInfo {
         }
         basicInfo = ObjectUtils.getModelFromJson(HeroBasicInfo.class, heroBasicInfoJson);
 
-        final JSONArray diaryJson = json.getJSONArray("diary");
-        final int diaryEntriesCount = diaryJson.length();
-        diary = new ArrayList<>(diaryEntriesCount);
-        for(int i = 0; i < diaryEntriesCount; i++) {
-            diary.add(ObjectUtils.getModelFromJson(DiaryEntry.class, ObjectUtils.getObjectFromArray(
-                    diaryJson.getJSONArray(i),
-                    new String[]{"timestamp", "time", "text", "date", "place"})));
-        }
+        diary = json.getString("diary");
 
         final JSONArray journalJson = json.getJSONArray("messages");
         final int journalEntriesCount = journalJson.length();
         journal = new ArrayList<>(journalEntriesCount);
         for(int i = 0; i < journalEntriesCount; i++) {
             journal.add(ObjectUtils.getModelFromJson(JournalEntry.class,
-                    ObjectUtils.getObjectFromArray(journalJson.getJSONArray(i), new String[]{"timestamp", "time", "text"})));
+                    ObjectUtils.getObjectFromArray(journalJson.getJSONArray(i), new String[]{"timestamp", "time", "text", "phraseId", "dictionary"})));
         }
 
         habits = new HashMap<>(Habit.values().length);

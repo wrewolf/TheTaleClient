@@ -333,6 +333,15 @@
             android:title="@string/settings_title_misc_confirmation_quest_choice"
             android:defaultValue="@bool/settings_misc_confirmation_default"/>
 
+        <ListPreference
+            android:layout="@layout/widget_preference_container"
+            android:key="@string/settings_key_appearance_journal"
+            android:title="@string/settings_title_appearance_journal"
+            android:entries="@array/settings_entries_appearance_journal"
+            android:entryValues="@array/settings_appearance_journal_values"
+            android:summary="%s"
+            android:defaultValue="@integer/settings_appearance_journal_default"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

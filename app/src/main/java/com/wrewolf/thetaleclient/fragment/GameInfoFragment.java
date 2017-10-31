@@ -386,7 +386,7 @@ public class GameInfoFragment extends WrapperFragment {
                     final JournalEntry journalEntry = journal.get(i);
                     final View journalEntryView = layoutInflater.inflate(R.layout.item_journal, journalContainer, false);
                     ((TextView) journalEntryView.findViewById(R.id.journal_time)).setText(journalEntry.time);
-                    ((TextView) journalEntryView.findViewById(R.id.journal_text)).setText(journalEntry.text);
+                    ((TextView) journalEntryView.findViewById(R.id.journal_text)).setText(journalEntry.spannableText);
                     journalContainer.addView(journalEntryView);
                 }
 

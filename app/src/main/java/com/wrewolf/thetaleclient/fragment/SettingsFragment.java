@@ -148,6 +148,16 @@ public class SettingsFragment extends PreferenceFragment {
                 R.array.settings_service_interval_values,
                 serviceInterval.getValue()));
 
+        // journal type
+        final ListPreference appearanceJournal = (ListPreference) findPreference(getString(R.string.settings_key_appearance_journal));
+        appearanceJournal.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                PreferencesManager.setAppearanceJournalType((String) newValue);
+                return true;
+            }
+        });
+
         // reading aloud
         final CheckBoxPreference journalReadAloud = (CheckBoxPreference) findPreference(getString(R.string.settings_key_read_aloud_journal));
         journalReadAloud.setOnPreferenceChangeListener(getReadAloudPreferenceChangeListener(journalReadAloud));

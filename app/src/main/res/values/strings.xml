@@ -366,6 +366,13 @@
     <string name="settings_key_misc_confirmation_quest_choice">KEY_SETTINGS_MISC_CONFIRMATION_QUEST_CHOICE</string>
     <string name="settings_title_misc_confirmation_bag_drop">Подтверждение при выбрасывании вещи</string>
     <string name="settings_title_misc_confirmation_quest_choice">Подтверждение при выборе в квесте</string>
+    <string name="settings_key_appearance_journal">KEY_SETTINGS_APPEARANCE_JOURNAL</string>
+    <string name="settings_title_appearance_journal">Внешний вид журнала</string>
+    <string-array name="settings_entries_appearance_journal">
+        <item>Весь текст</item>
+        <item>Художественный</item>
+        <item>Технический</item>
+    </string-array>
     <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

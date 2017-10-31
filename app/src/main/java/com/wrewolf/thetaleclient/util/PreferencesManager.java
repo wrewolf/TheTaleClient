@@ -38,6 +38,7 @@ public class PreferencesManager
   private static final String KEY_SESSION = "KEY_SESSION";
   private static final String KEY_READ_ALOUD_CONFIRMED = "KEY_READ_ALOUD_CONFIRMED";
   private static final String KEY_LAST_DIARY_ENTRY_READ = "KEY_LAST_DIARY_ENTRY_READ";
+  private static final String KEY_LAST_DIARY_VERSION_READ = "KEY_LAST_DIARY_VERSION_READ";
   private static final String KEY_DESIRED_GAME_PAGE = "KEY_DESIRED_GAME_PAGE";
   private static final String KEY_WIDGETS_COUNT = "KEY_WIDGETS_COUNT";
   private static final String KEY_SHOULD_EXIT = "KEY_SHOULD_EXIT";
@@ -515,6 +516,26 @@ public class PreferencesManager
     }
   }
 
+  public static int getAppearanceJournalType()
+  {
+    final int appearanceJournalDefault = getInteger(R.integer.settings_appearance_journal_default);
+    final String appearanceJournal = sharedPreferences.getString(
+            getString(R.string.settings_key_appearance_journal),
+            String.valueOf(appearanceJournalDefault));
+    try
+    {
+      return Integer.parseInt(appearanceJournal);
+    } catch (NumberFormatException ignored)
+    {
+      return appearanceJournalDefault;
+    }
+  }
+
+  public static void setAppearanceJournalType(final String type)
+  {
+    sharedPreferences.put(getString(R.string.settings_key_appearance_journal), type);
+  }
+
   public static boolean isJournalReadAloudEnabled()
   {
     return sharedPreferences.getBoolean(
@@ -557,6 +578,16 @@ public class PreferencesManager
   public static void setLastDiaryEntryRead(final int timestamp)
   {
     sharedPreferences.put(KEY_LAST_DIARY_ENTRY_READ, timestamp);
+  }
+
+  public static String getLastDiaryVersionRead()
+  {
+    return sharedPreferences.getString(KEY_LAST_DIARY_VERSION_READ, "");
+  }
+
+  public static void setLastDiaryVersionRead(final String version)
+  {
+    sharedPreferences.put(KEY_LAST_DIARY_VERSION_READ, version);
   }
 
   public static boolean isConfirmationBagDropEnabled()

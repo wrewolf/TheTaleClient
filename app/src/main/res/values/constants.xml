@@ -38,6 +38,12 @@
         <item>1800</item>
         <item>3600</item>
     </string-array>
+    <integer name="settings_appearance_journal_default">1</integer>
+    <string-array name="settings_appearance_journal_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <bool name="settings_read_aloud_default">false</bool>
 

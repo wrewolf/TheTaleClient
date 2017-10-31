@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -215,6 +216,21 @@ public class UiUtils {
 
     public static void setRemoteViewsViewVisibility(final RemoteViews remoteViews, final int viewId, final boolean isVisible) {
         remoteViews.setViewVisibility(viewId, isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    public static Spannable buildSpannableText(final String artText, final String technicalText, final int coloredLength, final int color) {
+        if (artText == null) {
+            final Spannable spannable = new SpannableString(technicalText);
+            spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, technicalText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(color), technicalText.length() - coloredLength, technicalText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannable;
+        } else {
+            final int stringLength = (artText + " " + technicalText).length();
+            final Spannable spannable = new SpannableString(artText + " " + technicalText);
+            spannable.setSpan(new StyleSpan(Typeface.BOLD), artText.length(), stringLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(color), stringLength - coloredLength, stringLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannable;
+        }
     }
 
 }

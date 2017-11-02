@@ -1,5 +1,9 @@
 package com.wrewolf.thetaleclient.api.dictionary;
 
+import android.util.Log;
+
+import com.wrewolf.thetaleclient.util.ObjectUtils;
+
 /**
  * @author Hamster
  * @since 02.10.2014
@@ -14,9 +18,11 @@ public enum CardType {
     ENERGY_DROP(5, CardRarity.COMMON, "капля энергии", "Вы получаете 10 единиц дополнительной энергии.", CardTargetType.NONE),
     SHOP_IMPULSE(41, CardRarity.COMMON, "магазинный импульс", "Текущей целью трат героя становится покупка артефакта.", CardTargetType.NONE),
     UNCHANGEABLE_COIN(53, CardRarity.COMMON, "неразменная монета", "Создаёт в указанном городе 20 «даров Хранителей». Город будет постепенно переводить их в продукцию, пока дары не кончатся.", CardTargetType.PLACE),
+    NEW_TARGET(116, CardRarity.COMMON, "новая цель", "Меняет текущую цель трат героя на указанную в названии", CardTargetType.NONE),
     NEW_CIRCUMSTANCES(78, CardRarity.COMMON, "новые обстоятельства", "Увеличивает влияние, которое окажет герой после выполнения текущего задания, на 500 единиц.", CardTargetType.NONE),
     COMMON_COMPANION(90, CardRarity.COMMON, "обычный спутник", "Герой получает спутника, указанного в названии карты. Если у героя уже есть спутник, он покинет героя.", CardTargetType.NONE),
     RESPITE(100, CardRarity.COMMON, "передышка", "Восстанавливает спутнику 1 здоровья.", CardTargetType.NONE),
+    FRESH_LOOK(117, CardRarity.COMMON, "свежий взгляд", "Позволяет изменить указанное в названии предпочтение героя.", CardTargetType.NONE),
     STRANGE_ITCH(40, CardRarity.COMMON, "странный зуд", "Текущей целью трат героя становится лечение.", CardTargetType.NONE),
     EXCELLENCE_AIM(42, CardRarity.COMMON, "стремление к совершенству", "Текущей целью трат героя становится заточка артефакта.", CardTargetType.NONE),
     KNOWLEDGE_AIM(43, CardRarity.COMMON, "тяга к знаниям", "Текущей целью трат героя становится обучение.", CardTargetType.NONE),
@@ -135,8 +141,17 @@ public enum CardType {
         return rarity;
     }
 
-    public CardTargetType getTargetType() {
-        return targetType;
+    public CardTargetType getTargetType(final String fullType) {
+        if (fullType.equals(Integer.toString(code))) {
+            return targetType;
+        } else {
+            final CardFullType cardFullType = ObjectUtils.getEnumForCode(CardFullType.class, fullType);
+            if (cardFullType == null) {
+                return targetType;
+            } else {;
+                return cardFullType.getTargetType();
+            }
+        }
     }
 
     public String getName() {

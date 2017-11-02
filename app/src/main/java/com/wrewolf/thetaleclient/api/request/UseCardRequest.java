@@ -18,16 +18,29 @@ import java.util.Map;
 public class UseCardRequest extends AbstractApiRequest<CommonResponse> {
 
     public UseCardRequest() {
-        super(HttpMethod.POST, "game/cards/api/use", "1.0", true);
+        super(HttpMethod.POST, "game/cards/api/use", "2.0", true);
     }
 
-    public void execute(final int cardId, final ApiResponseCallback<CommonResponse> callback) {
+    public void execute(final String cardId, final ApiResponseCallback<CommonResponse> callback) {
         final Map<String, String> getParams = new HashMap<>(1);
         getParams.put("card", String.valueOf(cardId));
         execute(getParams, null, callback);
     }
 
-    public void execute(final int cardId, final CardTargetType targetType, final int targetId,
+    public void execute(final String cardId, final String value,
+                        final ApiResponseCallback<CommonResponse> callback) {
+        final Map<String, String> getParams = new HashMap<>(1);
+        getParams.put("card", String.valueOf(cardId));
+
+        final Map<String, String> postParams = new HashMap<>();
+        if (value != null) {
+            postParams.put("value", value);
+        }
+
+        execute(getParams, postParams, callback);
+    }
+
+    public void execute(final String cardId, final CardTargetType targetType, final int targetId,
                         final ApiResponseCallback<CommonResponse> callback) {
         final Map<String, String> getParams = new HashMap<>(1);
         getParams.put("card", String.valueOf(cardId));

@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class CardInfo implements Comparable<CardInfo>, Parcelable {
 
-    public final int id;
+    public final String id;
     public final CardType type;
     public final CardRarity rarity;
     public final String fullType;
@@ -25,7 +25,7 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
     public final boolean inStorage;
 
     public CardInfo(final JSONObject json) throws JSONException {
-        id = json.getInt("uid");
+        id = json.getString("uid");
         type = ObjectUtils.getEnumForCode(CardType.class, json.getInt("type"));
         rarity = ObjectUtils.getEnumForCode(CardRarity.class, json.getInt("rarity"));
         name = json.getString("name");
@@ -84,7 +84,7 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
 
     // parcelable stuff
     private CardInfo(final Parcel in) {
-        id = in.readInt();
+        id = in.readString();
 
         final int typeIndex = in.readInt();
         type = typeIndex < 0 ? null : CardType.values()[typeIndex];
@@ -103,7 +103,7 @@ public class CardInfo implements Comparable<CardInfo>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(id);
+        out.writeString(id);
         out.writeInt(type == null ? -1 : type.ordinal());
         out.writeInt(rarity.ordinal());
         out.writeString(name);

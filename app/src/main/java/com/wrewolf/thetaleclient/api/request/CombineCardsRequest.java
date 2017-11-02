@@ -19,17 +19,17 @@ import java.util.Map;
  */
 public class CombineCardsRequest extends AbstractApiRequest<CombineCardsResponse> {
 
-    private final List<Integer> cardIds;
+    private final List<String> cardIds;
 
-    public CombineCardsRequest(final List<Integer> cardIds) {
-        super(HttpMethod.POST, "game/cards/api/combine", "1.0", true);
+    public CombineCardsRequest(final List<String> cardIds) {
+        super(HttpMethod.POST, "game/cards/api/combine", "2.0", true);
         this.cardIds = cardIds;
     }
 
     public void execute(final ApiResponseCallback<CombineCardsResponse> callback) {
         final StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
-        for(final int cardId : cardIds) {
+        for(final String cardId : cardIds) {
             if(first) {
                 first = false;
             } else {
@@ -38,9 +38,9 @@ public class CombineCardsRequest extends AbstractApiRequest<CombineCardsResponse
             stringBuilder.append(cardId);
         }
 
-        final Map<String, String> getParams = new HashMap<>(1);
-        getParams.put("cards", stringBuilder.toString());
-        execute(getParams, null, callback);
+        final Map<String, String> postParams = new HashMap<>(1);
+        postParams.put("card", stringBuilder.toString());
+        execute(null, postParams, callback);
     }
 
     protected CombineCardsResponse getResponse(final String response) throws JSONException {

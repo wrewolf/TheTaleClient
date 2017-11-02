@@ -64,6 +64,8 @@
     <string name="game_card_use_no_buildings">Нет советников со зданиями</string>
     <string name="game_card_use_person">Советник</string>
     <string name="game_card_use_place">Город</string>
+    <string name="game_card_use_archetype">Архетип</string>
+    <string name="game_card_use_energy_regeneration">Религиозность</string>
     <string name="game_card_use_progress">Использование карты&#8230;</string>
     <string name="game_cards_combine">Объединить карты</string>
     <string name="game_cards_combine_cancel">Отмена</string>
@@ -71,6 +73,7 @@
     <string name="game_cards_combine_progress">Объединение карт&#8230;</string>
     <string name="game_cards_combine_result">Карты объединены</string>
     <string name="game_cards_unavailable_foreign">Просмотр чужих карт судьбы недоступен</string>
+    <string name="game_cards_forget">Забыть предпочтение</string>
 
     <string name="game_companion_absent">Нет спутника</string>
     <string name="game_companion_feature_coherence">Слаженность %1$d</string>

@@ -4,8 +4,6 @@ import com.wrewolf.thetaleclient.api.AbstractApiRequest;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.HttpMethod;
 import com.wrewolf.thetaleclient.api.response.CardsResponse;
-import com.wrewolf.thetaleclient.api.response.CommonResponse;
-import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
 
 import org.json.JSONException;
 
@@ -20,7 +18,7 @@ public class CardsRequest extends AbstractApiRequest<CardsResponse> {
 
 
     public CardsRequest() {
-        super(HttpMethod.POST, "game/cards/api/get-cards", "2.0", false);
+        super(HttpMethod.GET, "game/cards/api/get-cards", "2.0", true);
     }
 
     public void execute(final int accountId, final ApiResponseCallback<CardsResponse> callback) {
@@ -35,7 +33,7 @@ public class CardsRequest extends AbstractApiRequest<CardsResponse> {
 
     @Override
     protected CardsResponse getResponse(String response) throws JSONException {
-        return null;
+        return new CardsResponse(response);
     }
 
     @Override

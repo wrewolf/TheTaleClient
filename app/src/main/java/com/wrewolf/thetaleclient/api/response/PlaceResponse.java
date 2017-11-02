@@ -43,8 +43,8 @@ public class PlaceResponse extends AbstractApiResponse {
         isFrontier = data.getBoolean("frontier");
         newThreshold = data.getInt("new_for");
         updateTime = data.getInt("updated_at");
-        powerBonusPositive = data.getJSONObject("power").getDouble("positive_bonus");
-        powerBonusNegative = data.getJSONObject("power").getDouble("negative_bonus");
+        //powerBonusPositive = data.getJSONObject("power").getDouble("positive_bonus");
+        //powerBonusNegative = data.getJSONObject("power").getDouble("negative_bonus");
 
         final JSONArray councilJson = data.getJSONArray("persons");
         final int councilCount = councilJson.length();

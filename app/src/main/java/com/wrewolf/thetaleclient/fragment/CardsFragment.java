@@ -35,8 +35,6 @@ import com.wrewolf.thetaleclient.util.RequestUtils;
 import com.wrewolf.thetaleclient.util.UiUtils;
 import com.wrewolf.thetaleclient.widget.RequestActionView;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -121,6 +119,67 @@ public class CardsFragment extends WrapperFragment {
                 }
             }
         });
+
+        final ApiResponseCallback<GameInfoResponse> gameInfoFragmentApiResponseCallback = RequestUtils.wrapCallback(new ApiResponseCallback<GameInfoResponse>() {
+            @Override
+            public void processResponse(GameInfoResponse response) {
+                if (response.account.hero.cards.cardHelpCurrent >= response.account.hero.cards.cardHelpBarrier) {
+                    helpCounterContainer.setVisibility(View.GONE);
+                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
+                    helpTakeCardWidget.setVisibility(View.VISIBLE);
+
+                    helpTakeCardWidget.setActionClickListener(new Runnable() {
+                        @Override
+                        public void run() {
+                            new TakeCardRequest().execute(RequestUtils.wrapCallback(new ApiResponseCallback<TakeCardResponse>() {
+                                @Override
+                                public void processResponse(TakeCardResponse response) {
+                                    helpTakeCardWidget.setMode(RequestActionView.Mode.ACTION);
+                                    DialogUtils.showCardInfoDialog(getChildFragmentManager(),
+                                            getString(R.string.game_card_take_result),
+                                            response.card,
+                                            new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    refresh(true);
+                                                }
+                                            });
+                                }
+
+                                @Override
+                                public void processError(TakeCardResponse response) {
+                                    helpTakeCardWidget.setErrorText(response.errorMessage);
+                                }
+                            }, CardsFragment.this));
+                        }
+                    });
+                } else {
+                    helpCounterContainer.setVisibility(View.VISIBLE);
+                    helpTakeCardWidget.setVisibility(View.GONE);
+
+                    helpCounterProgress.setMax(response.account.hero.cards.cardHelpBarrier); // response.account.hero.cards.cardHelpBarrier
+                    helpCounterProgress.setProgress(response.account.hero.cards.cardHelpCurrent); //response.account.hero.cards.cardHelpCurrent
+                    helpCounter.setText(getString(R.string.game_help_progress_to_next_card,
+                            response.account.hero.cards.cardHelpCurrent,
+                            response.account.hero.cards.cardHelpBarrier));
+                    helpCounter.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (isAdded()) {
+                                UiUtils.setHeight(helpCounterProgress,
+                                        (int) (helpCounter.getHeight() + 2 * getResources().getDimension(R.dimen.game_info_bar_padding)));
+                            }
+                            UiUtils.removeGlobalLayoutListener(helpCounter, this);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void processError(GameInfoResponse response) {
+                setError(response.errorMessage);
+            }
+        }, this);
 
         final ApiResponseCallback<CardsResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<CardsResponse>() {
             @Override
@@ -207,20 +266,21 @@ public class CardsFragment extends WrapperFragment {
                             } else {
                                 if (card.type != null) {
                                     DialogUtils.showCardUseDialog(
-                                            getChildFragmentManager(),
-                                            getString(R.string.game_card_use),
-                                            card,
-                                            new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            refresh(true);
-                                                        }
-                                                    });
-                                                }
-                                            });
+                                        getChildFragmentManager(),
+                                        getString(R.string.game_card_use),
+                                        card,
+                                        new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        refresh(true);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    );
                                 }
                             }
                         }
@@ -239,8 +299,10 @@ public class CardsFragment extends WrapperFragment {
 
         final int watchingAccountId = PreferencesManager.getWatchingAccountId();
         if (watchingAccountId == 0) {
+            new GameInfoRequest(true).execute(gameInfoFragmentApiResponseCallback, false);
             new CardsRequest().execute(callback);
         } else {
+            new GameInfoRequest(true).execute(watchingAccountId, gameInfoFragmentApiResponseCallback, false);
             new CardsRequest().execute(watchingAccountId, callback);
         }
     }
@@ -271,7 +333,7 @@ public class CardsFragment extends WrapperFragment {
                             true, false);
 
                     final Collection<CardInfo> cardsList = new ArrayList<>(cardsListInitial);
-                    final List<Integer> cardIds = new ArrayList<>();
+                    final List<String> cardIds = new ArrayList<>();
                     for (final Pair<CardInfo, View> pair : combiningCardsList) {
                         for (final Iterator<CardInfo> iterator = cardsList.iterator(); iterator.hasNext(); ) {
                             final CardInfo card = iterator.next();

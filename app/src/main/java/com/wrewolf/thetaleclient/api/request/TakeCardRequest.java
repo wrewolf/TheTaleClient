@@ -18,7 +18,7 @@ import java.util.Map;
 public class TakeCardRequest extends AbstractApiRequest<TakeCardResponse> {
 
     public TakeCardRequest() {
-        super(HttpMethod.POST, "game/cards/api/get", "1.0", true);
+        super(HttpMethod.POST, "game/cards/api/get", "2.0", true);
     }
 
     public void execute(final ApiResponseCallback<TakeCardResponse> callback) {

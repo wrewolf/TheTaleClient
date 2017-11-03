@@ -10,6 +10,8 @@ public enum CardTargetType {
     PERSON,
     PLACE,
     BUILDING,
+    ENERGY_REGENERATION,
+    ARCHETYPE,
     ;
 
 }

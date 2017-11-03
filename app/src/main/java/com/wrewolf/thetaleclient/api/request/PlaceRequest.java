@@ -13,8 +13,8 @@ import org.json.JSONException;
  */
 public class PlaceRequest extends AbstractApiRequest<PlaceResponse> {
 
-    public PlaceRequest(final int placeId) {
-        super(HttpMethod.GET, String.format("game/map/places/%d/api/show", placeId), "1.0", true);
+    public PlaceRequest(final String placeId) {
+        super(HttpMethod.GET, String.format("game/places/%s/api/show", placeId), "2", true);
     }
 
     public void execute(final ApiResponseCallback<PlaceResponse> callback) {

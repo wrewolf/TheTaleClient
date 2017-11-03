@@ -6,19 +6,25 @@ package com.wrewolf.thetaleclient.api.dictionary;
  */
 public enum Archetype {
 
-    ADVENTURER("авантюрист"),
-    WARRIOR("воин"),
-    MAGE("маг"),
+    MAGE("маг", "ARCHETYPE.MAGICAL"),
+    ADVENTURER("авантюрист", "ARCHETYPE.NEUTRAL"),
+    WARRIOR("воин", "ARCHETYPE.PHYSICAL"),
     ;
 
     private final String code;
+    private final String value;
 
-    private Archetype(final String code) {
+    Archetype(final String code, final String value) {
         this.code = code;
+        this.value = value;
     }
 
     public String getCode() {
         return code;
+    }
+
+    public String getValue() {
+        return value;
     }
 
 }

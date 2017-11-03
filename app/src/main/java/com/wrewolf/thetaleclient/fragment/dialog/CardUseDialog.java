@@ -1,11 +1,13 @@
 package com.wrewolf.thetaleclient.fragment.dialog;
 
 import android.app.ProgressDialog;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,11 @@ import android.widget.TextView;
 
 import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.api.ApiResponseCallback;
+import com.wrewolf.thetaleclient.api.dictionary.Archetype;
+import com.wrewolf.thetaleclient.api.dictionary.CardFullType;
 import com.wrewolf.thetaleclient.api.dictionary.CardTargetType;
+import com.wrewolf.thetaleclient.api.dictionary.CardType;
+import com.wrewolf.thetaleclient.api.dictionary.EnergyRegeneration;
 import com.wrewolf.thetaleclient.api.model.CardInfo;
 import com.wrewolf.thetaleclient.api.model.CouncilMemberInfo;
 import com.wrewolf.thetaleclient.api.model.PlaceInfo;
@@ -24,9 +30,11 @@ import com.wrewolf.thetaleclient.api.response.CommonResponse;
 import com.wrewolf.thetaleclient.api.response.PlaceResponse;
 import com.wrewolf.thetaleclient.api.response.PlacesResponse;
 import com.wrewolf.thetaleclient.util.DialogUtils;
+import com.wrewolf.thetaleclient.util.ObjectUtils;
 import com.wrewolf.thetaleclient.util.RequestUtils;
 import com.wrewolf.thetaleclient.util.UiUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -46,11 +54,13 @@ public class CardUseDialog extends BaseDialog {
     private Runnable onSuccess;
     
     private List<PlaceInfo> places;
+    private List<Archetype> archetypes;
+    private List<EnergyRegeneration> energyRegenerations;
     private Map<Integer, List<CouncilMemberInfo>> persons;
     private CardInfo card;
 
     private View viewAction;
-  private TextView textPlace;
+    private TextView textPlace;
     private TextView textPerson;
 
     public static CardUseDialog newInstance(final String title, final CardInfo card) {
@@ -80,8 +90,8 @@ public class CardUseDialog extends BaseDialog {
         UiUtils.setText(view.findViewById(R.id.dialog_card_use_description), card.type.getDescription());
 
         persons = new HashMap<>();
-        final boolean isPlacePresent = isPlacePresent(card.type.getTargetType());
-        final boolean isPersonPresent = isPersonPresent(card.type.getTargetType());
+        final boolean isPlacePresent = isPlacePresent(card.type.getTargetType(card.fullType));
+        final boolean isPersonPresent = isPersonPresent(card.type.getTargetType(card.fullType));
 
         viewAction = view.findViewById(R.id.dialog_card_use_action);
       View blockPlace = view.findViewById(R.id.dialog_card_use_place_block);
@@ -99,7 +109,7 @@ public class CardUseDialog extends BaseDialog {
             if(isPersonPresent) {
                 blockPerson.setVisibility(View.VISIBLE);
                 ((TextView) view.findViewById(R.id.dialog_card_use_person_title)).setText(getString(
-                        card.type.getTargetType() == CardTargetType.BUILDING
+                        card.type.getTargetType(card.fullType) == CardTargetType.BUILDING
                                 ? R.string.game_card_use_building
                                 : R.string.game_card_use_person));
                 textPerson.setEnabled(false);
@@ -118,10 +128,21 @@ public class CardUseDialog extends BaseDialog {
                             return lhs.name.compareTo(rhs.name);
                         }
                     });
-                    final int count = places.size();
-                    final String[] placeNames = new String[count];
-                    for(int i = 0; i < count; i++) {
-                        placeNames[i] = places.get(i).name;
+                    final String[] placeNames;
+
+                    if (canBeForgotten(card.type, card.fullType)) {
+                        final int count = places.size() + 1;
+                        placeNames = new String[count];
+                        placeNames[0] = getString(R.string.game_cards_forget);
+                        for(int i = 1; i < count; i++) {
+                            placeNames[i] = places.get(i - 1).name;
+                        }
+                    } else {
+                        final int count = places.size();
+                        placeNames = new String[count];
+                        for(int i = 0; i < count; i++) {
+                            placeNames[i] = places.get(i).name;
+                        }
                     }
 
                     textPlace.setEnabled(true);
@@ -151,6 +172,74 @@ public class CardUseDialog extends BaseDialog {
                     }
                 }
             }, this));
+        } else if (card.type.getTargetType(card.fullType) == CardTargetType.ENERGY_REGENERATION) {
+            viewAction.setEnabled(false);
+
+            blockPlace.setVisibility(View.VISIBLE);
+            textPlace.setEnabled(false);
+            textPlace.setText(getString(R.string.common_loading));
+
+            energyRegenerations = Arrays.asList(EnergyRegeneration.values());
+
+            final int count = energyRegenerations.size();
+            final String[] energyRegenerationNames = new String[count];
+            for (int i = 0; i < count; i++) {
+                energyRegenerationNames[i] = energyRegenerations.get(i).getCode();
+            }
+
+            textPlace.setEnabled(true);
+            onEnergyRegenerationSelected(0);
+
+            textPlace.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogUtils.showChoiceDialog(
+                            getChildFragmentManager(),
+                            getString(R.string.game_card_use_energy_regeneration),
+                            energyRegenerationNames,
+                            new ChoiceDialog.ItemChooseListener() {
+                                @Override
+                                public void onItemSelected(int position) {
+                                    onEnergyRegenerationSelected(position);
+                                }
+                            }
+                    );
+                }
+            });
+        } else if (card.type.getTargetType(card.fullType) == CardTargetType.ARCHETYPE) {
+            viewAction.setEnabled(false);
+
+            blockPlace.setVisibility(View.VISIBLE);
+            textPlace.setEnabled(false);
+            textPlace.setText(getString(R.string.common_loading));
+
+            archetypes = Arrays.asList(Archetype.values());
+
+            final int count = archetypes.size();
+            final String[] archetypeNames = new String[count];
+            for (int i = 0; i < count; i++) {
+                archetypeNames[i] = archetypes.get(i).getCode();
+            }
+
+            textPlace.setEnabled(true);
+            onArchetypeSelected(0);
+
+            textPlace.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogUtils.showChoiceDialog(
+                        getChildFragmentManager(),
+                        getString(R.string.game_card_use_archetype),
+                        archetypeNames,
+                        new ChoiceDialog.ItemChooseListener() {
+                            @Override
+                            public void onItemSelected(int position) {
+                                onArchetypeSelected(position);
+                            }
+                        }
+                    );
+                }
+            });
         } else {
             blockPlace.setVisibility(View.GONE);
             blockPerson.setVisibility(View.GONE);
@@ -181,44 +270,120 @@ public class CardUseDialog extends BaseDialog {
                 || (targetType == CardTargetType.BUILDING);
     }
 
-    private void onPlaceSelected(final int placeIndex) {
-        final PlaceInfo place = places.get(placeIndex);
-        textPlace.setText(place.name);
-        if(isPersonPresent(card.type.getTargetType())) {
-            viewAction.setEnabled(false);
-            textPerson.setEnabled(false);
+    private boolean canBeForgotten(final CardType cardType, final String fullType) {
+        final CardFullType cardFullType = ObjectUtils.getEnumForCode(CardFullType.class, fullType);
+        if (cardFullType == null) {
+            return false;
+        } else {
+            return cardFullType.getCanBeForgotten();
+        }
+    }
 
-            final List<CouncilMemberInfo> council = persons.get(placeIndex);
-            if(council == null) {
-                textPerson.setText(getString(R.string.common_loading));
-                new PlaceRequest(place.id).execute(RequestUtils.wrapCallback(new ApiResponseCallback<PlaceResponse>() {
+    private void onEnergyRegenerationSelected(final int energyRegenerationIndex) {
+        final EnergyRegeneration energyRegeneration = energyRegenerations.get(energyRegenerationIndex);
+        textPlace.setText(energyRegeneration.getCode());
+
+        viewAction.setEnabled(true);
+        viewAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                        getString(R.string.game_card_use),
+                        getString(R.string.game_card_use_progress),
+                        true, false);
+                new UseCardRequest().execute(
+                        card.id, energyRegeneration.getValue(),
+                        getCardUseCallback(progressDialog));
+            }
+        });
+    }
+
+    private void onArchetypeSelected(final int archetypeIndex) {
+        final Archetype archetype = archetypes.get(archetypeIndex);
+        textPlace.setText(archetype.getCode());
+
+        viewAction.setEnabled(true);
+        viewAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                        getString(R.string.game_card_use),
+                        getString(R.string.game_card_use_progress),
+                        true, false);
+                new UseCardRequest().execute(
+                        card.id, archetype.getValue(),
+                        getCardUseCallback(progressDialog));
+            }
+        });
+    }
+
+    private void onPlaceSelected(final int placeIndex) {
+        final String value;
+        if (canBeForgotten(card.type, card.fullType)) {
+            if (placeIndex == 0) {
+                value = null;
+                textPlace.setText(getString(R.string.game_cards_forget));
+            } else {
+                final PlaceInfo place = places.get(placeIndex - 1);
+                value = String.valueOf(place.id);
+                textPlace.setText(place.name);
+            }
+        } else {
+            final PlaceInfo place = places.get(placeIndex);
+            value = String.valueOf(place.id);
+            textPlace.setText(place.name);
+        }
+        if(isPersonPresent(card.type.getTargetType(card.fullType))) {
+            textPerson.setEnabled(false);
+            if (canBeForgotten(card.type, card.fullType) && placeIndex == 0) {
+                viewAction.setEnabled(true);
+                textPerson.setText(getString(R.string.game_cards_forget));
+                viewAction.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void processResponse(PlaceResponse response) {
-                        if(card.type.getTargetType() == CardTargetType.BUILDING) {
-                            for(final Iterator<CouncilMemberInfo> councilIterator = response.council.iterator();
-                                councilIterator.hasNext();) {
-                                if(councilIterator.next().buildingId == null) {
-                                    councilIterator.remove();
+                    public void onClick(View v) {
+                        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                                getString(R.string.game_card_use),
+                                getString(R.string.game_card_use_progress),
+                                true, false);
+                        new UseCardRequest().execute(
+                                card.id, value,
+                                getCardUseCallback(progressDialog));
+                    }
+                });
+            } else {
+                viewAction.setEnabled(false);
+                final List<CouncilMemberInfo> council = persons.get(placeIndex);
+                if(council == null) {
+                    textPerson.setText(getString(R.string.common_loading));
+                    new PlaceRequest(value).execute(RequestUtils.wrapCallback(new ApiResponseCallback<PlaceResponse>() {
+                        @Override
+                        public void processResponse(PlaceResponse response) {
+                            if(card.type.getTargetType(card.fullType) == CardTargetType.BUILDING) {
+                                for(final Iterator<CouncilMemberInfo> councilIterator = response.council.iterator();
+                                    councilIterator.hasNext();) {
+                                    if(councilIterator.next().buildingId == null) {
+                                        councilIterator.remove();
+                                    }
                                 }
                             }
+                            Collections.sort(response.council, new Comparator<CouncilMemberInfo>() {
+                                @Override
+                                public int compare(CouncilMemberInfo lhs, CouncilMemberInfo rhs) {
+                                    return Double.compare(rhs.power, lhs.power);
+                                }
+                            });
+                            persons.put(placeIndex, response.council);
+                            fillPersons(placeIndex);
                         }
-                        Collections.sort(response.council, new Comparator<CouncilMemberInfo>() {
-                            @Override
-                            public int compare(CouncilMemberInfo lhs, CouncilMemberInfo rhs) {
-                                return Double.compare(rhs.power.power, lhs.power.power);
-                            }
-                        });
-                        persons.put(placeIndex, response.council);
-                        fillPersons(placeIndex);
-                    }
 
-                    @Override
-                    public void processError(PlaceResponse response) {
-                        textPerson.setText(getString(R.string.common_error_hint));
-                    }
-                }, this));
-            } else {
-                fillPersons(placeIndex);
+                        @Override
+                        public void processError(PlaceResponse response) {
+                            textPerson.setText(getString(R.string.common_error_hint));
+                        }
+                    }, this));
+                } else {
+                    fillPersons(placeIndex);
+                }
             }
         } else {
             viewAction.setEnabled(true);
@@ -230,7 +395,7 @@ public class CardUseDialog extends BaseDialog {
                             getString(R.string.game_card_use_progress),
                             true, false);
                     new UseCardRequest().execute(
-                            card.id, card.type.getTargetType(), place.id,
+                            card.id, value,
                             getCardUseCallback(progressDialog));
                 }
             });
@@ -258,7 +423,7 @@ public class CardUseDialog extends BaseDialog {
             public void onClick(View v) {
                 DialogUtils.showChoiceDialog(
                         getChildFragmentManager(),
-                        getString(card.type.getTargetType() == CardTargetType.BUILDING
+                        getString(card.type.getTargetType(card.fullType) == CardTargetType.BUILDING
                                 ? R.string.game_card_use_building : R.string.game_card_use_person),
                         personNames,
                         new ChoiceDialog.ItemChooseListener() {
@@ -283,9 +448,9 @@ public class CardUseDialog extends BaseDialog {
                         getString(R.string.game_card_use_progress),
                         true, false);
                 new UseCardRequest().execute(
-                        card.id, card.type.getTargetType(),
-                        card.type.getTargetType() == CardTargetType.BUILDING
-                                ? councilMemberInfo.buildingId : councilMemberInfo.id,
+                        card.id,
+                        card.type.getTargetType(card.fullType) == CardTargetType.BUILDING
+                                ? String.valueOf(councilMemberInfo.buildingId) : String.valueOf(councilMemberInfo.id),
                         getCardUseCallback(progressDialog));
             }
         });

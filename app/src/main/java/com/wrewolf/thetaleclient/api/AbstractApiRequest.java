@@ -18,6 +18,7 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,10 +69,20 @@ public abstract class AbstractApiRequest<T extends AbstractApiResponse>
 
   protected void execute(final Map<String, String> getParams, final Map<String, String> postParams, final ApiResponseCallback<T> callback)
   {
-    execute(getParams, postParams, callback, true);
+    execute(getParams, postParams, callback, true, null);
   }
 
   protected void execute(final Map<String, String> getParams, final Map<String, String> postParams, final ApiResponseCallback<T> callback, final boolean useCache)
+  {
+    execute(getParams, postParams, callback, useCache, null);
+  }
+
+  protected void execute(final Map<String, String> getParams, final Map<String, String> postParams, final ApiResponseCallback<T> callback, final Map<String, ArrayList<String>> multiParams)
+  {
+    execute(getParams, postParams, callback, true, multiParams);
+  }
+
+  protected void execute(final Map<String, String> getParams, final Map<String, String> postParams, final ApiResponseCallback<T> callback, final boolean useCache, final Map<String, ArrayList<String>> multiParams)
   {
     final String url = String.format(URL, methodUrl);
     final com.wrewolf.thetaleclient.api.cache.Request request =
@@ -145,7 +156,7 @@ public abstract class AbstractApiRequest<T extends AbstractApiResponse>
 
     final OkHttpClient httpClient = new OkHttpClient().newBuilder().cookieJar(cookieJar).build();
 
-    final Request httpRequest = httpMethod.getHttpRequest(url, requestGetParams, requestPostParams);
+    final Request httpRequest = httpMethod.getHttpRequest(url, requestGetParams, requestPostParams, multiParams);
 
     httpClient.newCall(httpRequest.getRequest()).enqueue(new Callback()
     {

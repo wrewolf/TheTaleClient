@@ -2,6 +2,7 @@ package com.wrewolf.thetaleclient.api;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -16,16 +17,20 @@ public enum HttpMethod
 
   GET
       {
-        public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams)
+        public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams, final Map<String, ArrayList<String>> multiParams)
         {
           return new com.wrewolf.thetaleclient.api.cache.Request(url, new Request.Builder().url(appendGetParams(url, getParams)).build(),
                                                                  getParams,
                                                                  postParams);
         }
+          public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams)
+          {
+              return getHttpRequest(url, getParams, postParams, null);
+          }
       },
   POST
       {
-        public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams)
+        public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams, final Map<String, ArrayList<String>> multiParams)
         {
           Request.Builder httpPostBuilder = new Request.Builder().url(appendGetParams(url, getParams));
           if (postParams == null)
@@ -39,11 +44,22 @@ public enum HttpMethod
           {
             formBodyBuilder.add(postParam.getKey(), postParam.getValue());
           }
+            for (final Map.Entry<String, ArrayList<String>> multiParam : multiParams.entrySet()) {
+                for (final String value : multiParam.getValue()) {
+                    formBodyBuilder.add(multiParam.getKey(), value);
+                }
+            }
           return new com.wrewolf.thetaleclient.api.cache.Request(url, httpPostBuilder.post(formBodyBuilder.build()).build(), getParams, postParams);
         }
+
+          public com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams)
+          {
+              return getHttpRequest(url, getParams, postParams, null);
+          }
       };
 
   public abstract com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams);
+  public abstract com.wrewolf.thetaleclient.api.cache.Request getHttpRequest(final String url, final Map<String, String> getParams, final Map<String, String> postParams, final Map<String, ArrayList<String>> multiParams);
 
   private static String appendGetParams(final String url, final Map<String, String> getParams)
   {

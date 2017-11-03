@@ -2,7 +2,7 @@
 /.idea
 /local.properties
 /gradle.properties
-
+/app/version.properties
 /app/src/main/res/raw
 build
 *.iml

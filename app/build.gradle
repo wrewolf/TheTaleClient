@@ -13,17 +13,20 @@ android {
         def code = versionProps['VERSION_CODE'].toInteger() + 1
         versionProps['VERSION_CODE'] = code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
-
-        defaultConfig {
-            applicationId "com.wrewolf.thetaleclient"
-            minSdkVersion 15
-            targetSdkVersion 26
-            versionCode code
-            versionName "1.6.9." + code + "_beta"
-            resValue "string", "tray__authority", "${applicationId}.tray"
-        }
     } else {
-        throw new Exception("Could not read version.properties!")
+        def code = 42
+        def Properties versionProps = new Properties()
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+
+    defaultConfig {
+        applicationId "com.wrewolf.thetaleclient"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode code
+        versionName "1.6.9." + code + "_beta"
+        resValue "string", "tray__authority", "${applicationId}.tray"
     }
 
     buildTypes {

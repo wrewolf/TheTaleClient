@@ -4,18 +4,14 @@ apply plugin: 'com.google.firebase.firebase-crash'
 android {
     compileSdkVersion 26
     def versionPropsFile = file('version.properties')
-
+    def code = 42
+    def Properties versionProps = new Properties()
     if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-
         versionProps.load(new FileInputStream(versionPropsFile))
-
-        def code = versionProps['VERSION_CODE'].toInteger() + 1
+        code = versionProps['VERSION_CODE'].toInteger() + 1
         versionProps['VERSION_CODE'] = code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
     } else {
-        def code = 42
-        def Properties versionProps = new Properties()
         versionProps['VERSION_CODE'] = code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
     }

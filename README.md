@@ -18,3 +18,5 @@ Android-клиент для многопользовательской zero-play
 
  * @author WreWolf
  * @since 2017.05.05
+ * @author Alexew
+ * @since 2017.10.31

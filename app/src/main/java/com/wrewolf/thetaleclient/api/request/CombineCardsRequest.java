@@ -9,6 +9,7 @@ import com.wrewolf.thetaleclient.util.RequestUtils;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,20 +28,15 @@ public class CombineCardsRequest extends AbstractApiRequest<CombineCardsResponse
     }
 
     public void execute(final ApiResponseCallback<CombineCardsResponse> callback) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        boolean first = true;
+        final ArrayList<String> cId = new ArrayList<>();
         for(final String cardId : cardIds) {
-            if(first) {
-                first = false;
-            } else {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append(cardId);
+            cId.add(cardId);
         }
 
-        final Map<String, String> postParams = new HashMap<>(1);
-        postParams.put("card", stringBuilder.toString());
-        execute(null, postParams, callback);
+        final Map<String, ArrayList<String>> cards = new HashMap<>(1);
+        cards.put("card", cId);
+
+        execute(null, null, callback, cards);
     }
 
     protected CombineCardsResponse getResponse(final String response) throws JSONException {

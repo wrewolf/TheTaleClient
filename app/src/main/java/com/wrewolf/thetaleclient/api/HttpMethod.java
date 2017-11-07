@@ -44,9 +44,11 @@ public enum HttpMethod
           {
             formBodyBuilder.add(postParam.getKey(), postParam.getValue());
           }
-            for (final Map.Entry<String, ArrayList<String>> multiParam : multiParams.entrySet()) {
-                for (final String value : multiParam.getValue()) {
-                    formBodyBuilder.add(multiParam.getKey(), value);
+            if (multiParams != null) {
+                for (final Map.Entry<String, ArrayList<String>> multiParam : multiParams.entrySet()) {
+                    for (final String value : multiParam.getValue()) {
+                        formBodyBuilder.add(multiParam.getKey(), value);
+                    }
                 }
             }
           return new com.wrewolf.thetaleclient.api.cache.Request(url, httpPostBuilder.post(formBodyBuilder.build()).build(), getParams, postParams);

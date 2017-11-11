@@ -15,7 +15,7 @@ import org.json.JSONException;
  */
 public class MapRequest extends CommonRequest
 {
-//  private static final String URL = "http://the-tale.org/dcont/map/region-%s.js";
+  //  private static final String URL = "http://the-tale.org/dcont/map/region-%s.js";
   private static final String URL = "http://the-tale.org/game/map/api/region?api_version=0.1&api_client=the_tale-v0.3.24.6&v=%s";
 
   private final String mapVersion;

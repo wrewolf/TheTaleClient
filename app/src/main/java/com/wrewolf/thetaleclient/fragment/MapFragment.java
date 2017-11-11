@@ -229,6 +229,7 @@ public class MapFragment extends WrapperFragment
         return true;
 
       case R.id.action_map_find_place:
+        Log.d("Alexew", "places size " + places.size());
         final int count = places.size();
         final String[] choices = new String[count];
         for (int i = 0; i < count; i++)
@@ -470,6 +471,7 @@ public class MapFragment extends WrapperFragment
                         @Override
                         public void processError(String error)
                         {
+                            Log.d("Alexew", "error 1");
                           setError(getString(R.string.map_error));
                           mapModification = MapModification.NONE;
                         }
@@ -485,6 +487,7 @@ public class MapFragment extends WrapperFragment
                       return;
                     }
 
+                      Log.d("Alexew", "error 2");
                     setError(getString(R.string.map_error));
                   }
                 });
@@ -493,6 +496,7 @@ public class MapFragment extends WrapperFragment
               @Override
               public void processError(String error)
               {
+                  Log.d("Alexew", "error 3 " + error);
                 setError(getString(R.string.map_error));
               }
             }, MapFragment.this));
@@ -501,6 +505,7 @@ public class MapFragment extends WrapperFragment
           @Override
           public void processError(GameInfoResponse response)
           {
+              Log.d("Alexew", "error 4");
             setError(getString(R.string.map_error));
           }
         }, MapFragment.this);
@@ -520,6 +525,7 @@ public class MapFragment extends WrapperFragment
       @Override
       public void processError(InfoResponse response)
       {
+          Log.d("Alexew", "error 5");
         setError(getString(R.string.map_error));
       }
     }, this).execute();
@@ -711,12 +717,10 @@ public class MapFragment extends WrapperFragment
           }
         });
 
-        // TODO: Написать получение данных из запроса
-        places = new ArrayList<>(0);
-//                places = new ArrayList<>(mapResponse.places.size());
-//                for (final MapPlaceInfo placeInfo : mapResponse.places.values()) {
-//                    places.add(placeInfo);
-//                }
+        places = new ArrayList<>(mapResponse.places.size());
+        for (final MapPlaceInfo placeInfo : mapResponse.places.values()) {
+            places.add(placeInfo);
+        }
         Collections.sort(places, new Comparator<MapPlaceInfo>()
         {
           @Override

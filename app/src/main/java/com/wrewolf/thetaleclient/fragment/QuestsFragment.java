@@ -201,7 +201,7 @@ public class QuestsFragment extends WrapperFragment {
 
                 // add town name to quest person actors
                 if(actorNames.size() > 0) {
-                    new MapRequest(response.mapVersion).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+                    new MapRequest(response.mapVersion).execute(RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>() {
                         @Override
                         public void processResponse(MapResponse response) {
                             for (final Map.Entry<TextView, Integer> actorNameEntry : actorNames.entrySet()) {
@@ -215,7 +215,7 @@ public class QuestsFragment extends WrapperFragment {
                         }
 
                         @Override
-                        public void processError(String error) {
+                        public void processError(MapResponse response) {
                             // do nothing
                         }
                     }, QuestsFragment.this));

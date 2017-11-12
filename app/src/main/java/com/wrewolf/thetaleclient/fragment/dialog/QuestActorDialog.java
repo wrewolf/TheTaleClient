@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.wrewolf.thetaleclient.DrawerItem;
 import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.activity.MainActivity;
+import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.CommonResponseCallback;
 import com.wrewolf.thetaleclient.api.cache.prerequisite.GameInfoPrerequisiteRequest;
 import com.wrewolf.thetaleclient.api.model.QuestActorInfo;
@@ -61,7 +62,7 @@ public class QuestActorDialog extends BaseDialog {
                 new GameInfoPrerequisiteRequest(new Runnable() {
                     @Override
                     public void run() {
-                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>() {
                             @Override
                             public void processResponse(MapResponse response) {
                                 setPlaceLink(
@@ -72,7 +73,7 @@ public class QuestActorDialog extends BaseDialog {
                             }
 
                             @Override
-                            public void processError(String error) {
+                            public void processError(MapResponse response) {
                             }
                         }, QuestActorDialog.this));
                     }
@@ -89,7 +90,7 @@ public class QuestActorDialog extends BaseDialog {
                 new GameInfoPrerequisiteRequest(new Runnable() {
                     @Override
                     public void run() {
-                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>() {
                             @Override
                             public void processResponse(MapResponse response) {
                                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_place_size), UiUtils.getInfoItem(
@@ -98,7 +99,7 @@ public class QuestActorDialog extends BaseDialog {
                             }
 
                             @Override
-                            public void processError(String error) {
+                            public void processError(MapResponse response) {
                             }
                         }, QuestActorDialog.this));
                     }

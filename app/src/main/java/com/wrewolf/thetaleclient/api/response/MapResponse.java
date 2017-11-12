@@ -1,5 +1,6 @@
 package com.wrewolf.thetaleclient.api.response;
 
+import com.wrewolf.thetaleclient.api.AbstractApiResponse;
 import com.wrewolf.thetaleclient.api.model.MapPlaceInfo;
 import com.wrewolf.thetaleclient.api.model.RoadInfo;
 import com.wrewolf.thetaleclient.api.model.SpriteTileInfo;
@@ -20,18 +21,22 @@ import java.util.Map;
  * @author Hamster
  * @since 07.10.2014
  */
-public class MapResponse {
+public class MapResponse extends AbstractApiResponse {
 
-    public final String formatVersion;
-    public final String mapVersion;
-    public final Map<Integer, MapPlaceInfo> places;
-    public final Map<Integer, RoadInfo> roads;
-    public final int width;
-    public final int height;
-    public final List<List<List<SpriteTileInfo>>> tiles;
+    public String formatVersion;
+    public String mapVersion;
+    public Map<Integer, MapPlaceInfo> places;
+    public Map<Integer, RoadInfo> roads;
+    public int width;
+    public int height;
+    public List<List<List<SpriteTileInfo>>> tiles;
 
-    public MapResponse(final String response) throws JSONException {
-        final JSONObject json = new JSONObject(response).getJSONObject("data").getJSONObject("region");
+    public MapResponse(String response) throws JSONException {
+        super(response);
+    }
+
+    protected void parseData(final JSONObject data) throws JSONException {
+        final JSONObject json = data.getJSONObject("region");
 
         formatVersion = json.getString("format_version");
 
@@ -73,5 +78,4 @@ public class MapResponse {
         height = json.getInt("height");
         mapVersion = json.getString("map_version");
     }
-
 }

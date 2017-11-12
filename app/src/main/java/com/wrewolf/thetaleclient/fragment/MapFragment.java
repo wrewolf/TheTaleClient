@@ -229,7 +229,6 @@ public class MapFragment extends WrapperFragment
         return true;
 
       case R.id.action_map_find_place:
-        Log.d("Alexew", "places size " + places.size());
         final int count = places.size();
         final String[] choices = new String[count];
         for (int i = 0; i < count; i++)
@@ -400,7 +399,7 @@ public class MapFragment extends WrapperFragment
           @Override
           public void processResponse(final GameInfoResponse gameInfoResponse)
           {
-            new MapRequest(gameInfoResponse.mapVersion).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>()
+            final ApiResponseCallback<MapResponse> mapCallback = RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>()
             {
               @Override
               public void processResponse(final MapResponse mapResponse)
@@ -471,7 +470,6 @@ public class MapFragment extends WrapperFragment
                         @Override
                         public void processError(String error)
                         {
-                            Log.d("Alexew", "error 1");
                           setError(getString(R.string.map_error));
                           mapModification = MapModification.NONE;
                         }
@@ -487,25 +485,23 @@ public class MapFragment extends WrapperFragment
                       return;
                     }
 
-                      Log.d("Alexew", "error 2");
                     setError(getString(R.string.map_error));
                   }
                 });
               }
 
               @Override
-              public void processError(String error)
-              {
-                  Log.d("Alexew", "error 3 " + error);
+              public void processError(MapResponse response) {
                 setError(getString(R.string.map_error));
               }
-            }, MapFragment.this));
+            }, MapFragment.this);
+
+            new MapRequest(gameInfoResponse.mapVersion).execute(mapCallback);
           }
 
           @Override
           public void processError(GameInfoResponse response)
           {
-              Log.d("Alexew", "error 4");
             setError(getString(R.string.map_error));
           }
         }, MapFragment.this);
@@ -525,7 +521,6 @@ public class MapFragment extends WrapperFragment
       @Override
       public void processError(InfoResponse response)
       {
-          Log.d("Alexew", "error 5");
         setError(getString(R.string.map_error));
       }
     }, this).execute();
@@ -622,9 +617,8 @@ public class MapFragment extends WrapperFragment
                 mapViewHelper.setMaximumScale(ZOOM_MAX * currentSizeDenominator);
                 mapViewHelper.setMediumScale((ZOOM_MAX * currentSizeDenominator + minimumScale) / 2.0f);
                 mapViewHelper.setMinimumScale(minimumScale);
-                // TODO: написать вбор из другого запроса
-//                                final MapPlaceInfo placeInfo = mapResponse.places.get(PreferencesManager.getMapCenterPlaceId());
-                final MapPlaceInfo placeInfo = null;
+
+                final MapPlaceInfo placeInfo = mapResponse.places.get(PreferencesManager.getMapCenterPlaceId());
                 if (placeInfo == null)
                 {
                   if (shouldMoveToHero)

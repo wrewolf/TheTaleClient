@@ -12,6 +12,7 @@ public enum CardTargetType {
     BUILDING,
     ENERGY_REGENERATION,
     ARCHETYPE,
+    RISK_LEVEL,
     ;
 
 }

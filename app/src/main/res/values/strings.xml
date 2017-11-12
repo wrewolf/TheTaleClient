@@ -65,6 +65,7 @@
     <string name="game_card_use_person">Советник</string>
     <string name="game_card_use_place">Город</string>
     <string name="game_card_use_archetype">Архетип</string>
+    <string name="game_card_use_risk_level">Уровень риска</string>
     <string name="game_card_use_energy_regeneration">Религиозность</string>
     <string name="game_card_use_progress">Использование карты&#8230;</string>
     <string name="game_cards_combine">Объединить карты</string>

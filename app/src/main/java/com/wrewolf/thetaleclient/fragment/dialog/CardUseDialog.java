@@ -20,6 +20,7 @@ import com.wrewolf.thetaleclient.api.dictionary.CardFullType;
 import com.wrewolf.thetaleclient.api.dictionary.CardTargetType;
 import com.wrewolf.thetaleclient.api.dictionary.CardType;
 import com.wrewolf.thetaleclient.api.dictionary.EnergyRegeneration;
+import com.wrewolf.thetaleclient.api.dictionary.RiskLevel;
 import com.wrewolf.thetaleclient.api.model.CardInfo;
 import com.wrewolf.thetaleclient.api.model.CouncilMemberInfo;
 import com.wrewolf.thetaleclient.api.model.PlaceInfo;
@@ -55,6 +56,7 @@ public class CardUseDialog extends BaseDialog {
     
     private List<PlaceInfo> places;
     private List<Archetype> archetypes;
+    private List<RiskLevel> riskLevels;
     private List<EnergyRegeneration> energyRegenerations;
     private Map<Integer, List<CouncilMemberInfo>> persons;
     private CardInfo card;
@@ -240,6 +242,40 @@ public class CardUseDialog extends BaseDialog {
                     );
                 }
             });
+        } else if (card.type.getTargetType(card.fullType) == CardTargetType.RISK_LEVEL) {
+            viewAction.setEnabled(false);
+
+            blockPlace.setVisibility(View.VISIBLE);
+            textPlace.setEnabled(false);
+            textPlace.setText(getString(R.string.common_loading));
+
+            riskLevels = Arrays.asList(RiskLevel.values());
+
+            final int count = riskLevels.size();
+            final String[] riskLevelNames = new String[count];
+            for (int i = 0; i < count; i++) {
+                riskLevelNames[i] = riskLevels.get(i).getCode();
+            }
+
+            textPlace.setEnabled(true);
+            onRiskLevelSelected(0);
+
+            textPlace.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogUtils.showChoiceDialog(
+                            getChildFragmentManager(),
+                            getString(R.string.game_card_use_risk_level),
+                            riskLevelNames,
+                            new ChoiceDialog.ItemChooseListener() {
+                                @Override
+                                public void onItemSelected(int position) {
+                                    onRiskLevelSelected(position);
+                                }
+                            }
+                    );
+                }
+            });
         } else {
             blockPlace.setVisibility(View.GONE);
             blockPerson.setVisibility(View.GONE);
@@ -312,6 +348,25 @@ public class CardUseDialog extends BaseDialog {
                         true, false);
                 new UseCardRequest().execute(
                         card.id, archetype.getValue(),
+                        getCardUseCallback(progressDialog));
+            }
+        });
+    }
+
+    private void onRiskLevelSelected(final int riskLevelIndex) {
+        final RiskLevel riskLevel = riskLevels.get(riskLevelIndex);
+        textPlace.setText(riskLevel.getCode());
+
+        viewAction.setEnabled(true);
+        viewAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                        getString(R.string.game_card_use),
+                        getString(R.string.game_card_use_progress),
+                        true, false);
+                new UseCardRequest().execute(
+                        card.id, riskLevel.getValue(),
                         getCardUseCallback(progressDialog));
             }
         });

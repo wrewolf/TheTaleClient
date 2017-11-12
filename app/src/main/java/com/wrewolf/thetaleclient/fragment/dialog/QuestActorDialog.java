@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.wrewolf.thetaleclient.DrawerItem;
 import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.activity.MainActivity;
+import com.wrewolf.thetaleclient.api.ApiResponseCallback;
 import com.wrewolf.thetaleclient.api.CommonResponseCallback;
 import com.wrewolf.thetaleclient.api.cache.prerequisite.GameInfoPrerequisiteRequest;
 import com.wrewolf.thetaleclient.api.model.QuestActorInfo;
@@ -56,25 +57,23 @@ public class QuestActorDialog extends BaseDialog {
                         UiUtils.getInfoItem(getString(R.string.quest_actor_gender), questActorInfo.personInfo.gender.getName()));
                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_profession),
                         UiUtils.getInfoItem(getString(R.string.quest_actor_profession), questActorInfo.personInfo.profession.getName()));
-                UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_mastery),
-                        UiUtils.getInfoItem(getString(R.string.quest_actor_mastery), questActorInfo.personInfo.mastery));
+//                UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_mastery),
+//                        UiUtils.getInfoItem(getString(R.string.quest_actor_mastery), questActorInfo.personInfo.mastery));
                 new GameInfoPrerequisiteRequest(new Runnable() {
                     @Override
                     public void run() {
-                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>() {
                             @Override
                             public void processResponse(MapResponse response) {
                                 setPlaceLink(
                                         view.findViewById(R.id.dialog_quest_actor_person_place),
                                         getString(R.string.quest_actor_place),
-                                        // TODO: переписать
-                                        "dummy",
-//                                        response.places.get(questActorInfo.personInfo.placeId).name,
+                                        response.places.get(questActorInfo.personInfo.placeId).name,
                                         questActorInfo.personInfo.placeId);
                             }
 
                             @Override
-                            public void processError(String error) {
+                            public void processError(MapResponse response) {
                             }
                         }, QuestActorDialog.this));
                     }
@@ -91,18 +90,16 @@ public class QuestActorDialog extends BaseDialog {
                 new GameInfoPrerequisiteRequest(new Runnable() {
                     @Override
                     public void run() {
-                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>() {
+                        new MapRequest(PreferencesManager.getMapVersion()).execute(RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>() {
                             @Override
                             public void processResponse(MapResponse response) {
                                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_place_size), UiUtils.getInfoItem(
                                         getString(R.string.map_place_size),
-                                        // TODO: заглушка
-                                        String.valueOf(0)));
-//                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
+                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
                             }
 
                             @Override
-                            public void processError(String error) {
+                            public void processError(MapResponse response) {
                             }
                         }, QuestActorDialog.this));
                     }

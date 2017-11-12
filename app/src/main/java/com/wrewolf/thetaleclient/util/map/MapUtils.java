@@ -4,14 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
-import android.os.Build;
 
+import com.wrewolf.thetaleclient.R;
 import com.wrewolf.thetaleclient.TheTaleClientApplication;
 import com.wrewolf.thetaleclient.api.dictionary.MapStyle;
 import com.wrewolf.thetaleclient.api.model.HeroInfo;
 import com.wrewolf.thetaleclient.api.model.MapCellTerrainInfo;
+import com.wrewolf.thetaleclient.api.model.MapPlaceInfo;
 import com.wrewolf.thetaleclient.api.model.SpriteTileInfo;
 import com.wrewolf.thetaleclient.api.response.MapResponse;
 import com.wrewolf.thetaleclient.api.response.MapTerrainResponse;
@@ -171,36 +173,36 @@ public class MapUtils {
         if(sizeDenominator > 2) {
             return;
         }
-// TODO: написать запрос
-//        for(final MapPlaceInfo placeInfo : mapInfo.places.values()) {
-//            float textSizeDenominator = sizeDenominator;
-//            if(PLACE_TEXT_SIZE / sizeDenominator < PLACE_TEXT_SIZE_MIN) {
-//                textSizeDenominator = PLACE_TEXT_SIZE / PLACE_TEXT_SIZE_MIN;
-//            }
-//
-//            final String text = String.format(PLACE_CAPTION, placeInfo.size, placeInfo.name);
-//
-//            final Paint textPaint = new Paint();
-//            textPaint.setTextSize(PLACE_TEXT_SIZE / textSizeDenominator);
-//            textPaint.setColor(TheTaleClientApplication.getContext().getResources().getColor(R.color.map_place_name));
-//
-//            final Rect textRect = new Rect();
-//            textPaint.getTextBounds(text, 0, text.length(), textRect);
-//
-//            final float x = ((placeInfo.x + 0.5f) * MAP_TILE_SIZE + PLACE_TEXT_X_SHIFT) / sizeDenominator - (textRect.right - textRect.left) / 2.0f;
-//            final float y = ((placeInfo.y + 1.0f) * MAP_TILE_SIZE + PLACE_TEXT_Y_SHIFT) / sizeDenominator;
-//
-//            final Paint backgroundPaint = new Paint();
-//            backgroundPaint.setColor(TheTaleClientApplication.getContext().getResources().getColor(R.color.map_place_name_background));
-//
-//            canvas.drawRect(
-//                    x + textRect.left - PLACE_TEXT_BACKGROUND_PADDING * 2 * (sizeDenominator / textSizeDenominator),
-//                    y + textRect.top - PLACE_TEXT_BACKGROUND_PADDING,
-//                    x + textRect.right + PLACE_TEXT_BACKGROUND_PADDING * 4 * (sizeDenominator / textSizeDenominator),
-//                    y + textRect.bottom + PLACE_TEXT_BACKGROUND_PADDING,
-//                    backgroundPaint);
-//            canvas.drawText(text, 0, text.length(), x, y, textPaint);
-//        }
+
+        for(final MapPlaceInfo placeInfo : mapInfo.places.values()) {
+            float textSizeDenominator = sizeDenominator;
+            if(PLACE_TEXT_SIZE / sizeDenominator < PLACE_TEXT_SIZE_MIN) {
+                textSizeDenominator = PLACE_TEXT_SIZE / PLACE_TEXT_SIZE_MIN;
+            }
+
+            final String text = String.format(PLACE_CAPTION, placeInfo.size, placeInfo.name);
+
+            final Paint textPaint = new Paint();
+            textPaint.setTextSize(PLACE_TEXT_SIZE / textSizeDenominator);
+            textPaint.setColor(TheTaleClientApplication.getContext().getResources().getColor(R.color.map_place_name));
+
+            final Rect textRect = new Rect();
+            textPaint.getTextBounds(text, 0, text.length(), textRect);
+
+            final float x = ((placeInfo.x + 0.5f) * MAP_TILE_SIZE + PLACE_TEXT_X_SHIFT) / sizeDenominator - (textRect.right - textRect.left) / 2.0f;
+            final float y = ((placeInfo.y + 1.0f) * MAP_TILE_SIZE + PLACE_TEXT_Y_SHIFT) / sizeDenominator;
+
+            final Paint backgroundPaint = new Paint();
+            backgroundPaint.setColor(TheTaleClientApplication.getContext().getResources().getColor(R.color.map_place_name_background));
+
+            canvas.drawRect(
+                    x + textRect.left - PLACE_TEXT_BACKGROUND_PADDING * 2 * (sizeDenominator / textSizeDenominator),
+                    y + textRect.top - PLACE_TEXT_BACKGROUND_PADDING,
+                    x + textRect.right + PLACE_TEXT_BACKGROUND_PADDING * 4 * (sizeDenominator / textSizeDenominator),
+                    y + textRect.bottom + PLACE_TEXT_BACKGROUND_PADDING,
+                    backgroundPaint);
+            canvas.drawText(text, 0, text.length(), x, y, textPaint);
+        }
     }
 
     /**

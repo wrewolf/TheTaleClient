@@ -22,7 +22,7 @@ public class QuestActorPersonInfo implements Parcelable {
     public final Race race;
     public final Gender gender;
     public final Profession profession;
-    public final String mastery;
+    //public final String mastery;
     public final int placeId;
 
     public QuestActorPersonInfo(final JSONObject json) throws JSONException {
@@ -31,7 +31,7 @@ public class QuestActorPersonInfo implements Parcelable {
         race = ObjectUtils.getEnumForCode(Race.class, json.getInt("race"));
         gender = ObjectUtils.getEnumForCode(Gender.class, json.getInt("gender"));
         profession = ObjectUtils.getEnumForCode(Profession.class, json.getInt("profession"));
-        mastery = json.getString("mastery_verbose");
+        //mastery = json.getString("mastery_verbose");
         placeId = json.getInt("place");
     }
 
@@ -43,7 +43,7 @@ public class QuestActorPersonInfo implements Parcelable {
         race = Race.values()[in.readInt()];
         gender = Gender.values()[in.readInt()];
         profession = Profession.values()[in.readInt()];
-        mastery = in.readString();
+        //mastery = in.readString();
         placeId = in.readInt();
     }
 
@@ -58,7 +58,7 @@ public class QuestActorPersonInfo implements Parcelable {
         out.writeInt(race.ordinal());
         out.writeInt(gender.ordinal());
         out.writeInt(profession.ordinal());
-        out.writeString(mastery);
+        //out.writeString(mastery);
         out.writeInt(placeId);
     }
 

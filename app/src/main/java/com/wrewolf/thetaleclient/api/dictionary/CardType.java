@@ -63,7 +63,7 @@ public enum CardType {
     CLEAR_MIND(75, CardRarity.UNCOMMON, "чистый разум", "Увеличивает опыт, который герой получит за выполнение текущего задания, на 100 единиц.", CardTargetType.NONE),
     GLUTTONY(14, CardRarity.UNCOMMON, "чревоугодие", "Уменьшает честь героя на 25 единиц.", CardTargetType.NONE),
     SENSITIVITY(96, CardRarity.UNCOMMON, "чуткость", "Сбрасывает задержку на изменение предпочтения «эмпатия».", CardTargetType.NONE),
-    TARDIS(83, CardRarity.RARE, "ТАРДИС", "Телепортирует героя в конечную точку назначения либо до ближайшей ключевой точки задания. Работает только во время движения по дорогам.", CardTargetType.NONE),
+    TARDIS(83, CardRarity.UNCOMMON, "ТАРДИС", "Телепортирует героя в конечную точку назначения либо до ближайшей ключевой точки задания. Работает только во время движения по дорогам.", CardTargetType.NONE),
     GREED(20, CardRarity.RARE, "алчность", "Уменьшает миролюбие героя на 100 единиц.", CardTargetType.NONE),
     WHOREDOM(18, CardRarity.RARE, "блуд", "Уменьшает честь героя на 100 единиц.", CardTargetType.NONE),
     FIDELITY(17, CardRarity.RARE, "верность", "Увеличивает честь героя на 100 единиц.", CardTargetType.NONE),

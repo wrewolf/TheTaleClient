@@ -399,7 +399,7 @@ public class MapFragment extends WrapperFragment
           @Override
           public void processResponse(final GameInfoResponse gameInfoResponse)
           {
-            new MapRequest(gameInfoResponse.mapVersion).execute(RequestUtils.wrapCallback(new CommonResponseCallback<MapResponse, String>()
+            final ApiResponseCallback<MapResponse> mapCallback = RequestUtils.wrapCallback(new ApiResponseCallback<MapResponse>()
             {
               @Override
               public void processResponse(final MapResponse mapResponse)
@@ -491,11 +491,12 @@ public class MapFragment extends WrapperFragment
               }
 
               @Override
-              public void processError(String error)
-              {
+              public void processError(MapResponse response) {
                 setError(getString(R.string.map_error));
               }
-            }, MapFragment.this));
+            }, MapFragment.this);
+
+            new MapRequest(gameInfoResponse.mapVersion).execute(mapCallback);
           }
 
           @Override
@@ -616,9 +617,8 @@ public class MapFragment extends WrapperFragment
                 mapViewHelper.setMaximumScale(ZOOM_MAX * currentSizeDenominator);
                 mapViewHelper.setMediumScale((ZOOM_MAX * currentSizeDenominator + minimumScale) / 2.0f);
                 mapViewHelper.setMinimumScale(minimumScale);
-                // TODO: написать вбор из другого запроса
-//                                final MapPlaceInfo placeInfo = mapResponse.places.get(PreferencesManager.getMapCenterPlaceId());
-                final MapPlaceInfo placeInfo = null;
+
+                final MapPlaceInfo placeInfo = mapResponse.places.get(PreferencesManager.getMapCenterPlaceId());
                 if (placeInfo == null)
                 {
                   if (shouldMoveToHero)
@@ -711,12 +711,10 @@ public class MapFragment extends WrapperFragment
           }
         });
 
-        // TODO: Написать получение данных из запроса
-        places = new ArrayList<>(0);
-//                places = new ArrayList<>(mapResponse.places.size());
-//                for (final MapPlaceInfo placeInfo : mapResponse.places.values()) {
-//                    places.add(placeInfo);
-//                }
+        places = new ArrayList<>(mapResponse.places.size());
+        for (final MapPlaceInfo placeInfo : mapResponse.places.values()) {
+            places.add(placeInfo);
+        }
         Collections.sort(places, new Comparator<MapPlaceInfo>()
         {
           @Override

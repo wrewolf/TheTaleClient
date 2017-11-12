@@ -1,10 +1,10 @@
 buildscript {
     ext.kotlin_version = '1.1.51'
     repositories {
+        google()
+        jcenter()
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://maven.google.com' }
-        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -15,15 +15,21 @@ buildscript {
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
+
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
 allprojects {
     repositories {
+        google()
+        jcenter()
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://maven.google.com' }
-        jcenter()
     }
 }
 

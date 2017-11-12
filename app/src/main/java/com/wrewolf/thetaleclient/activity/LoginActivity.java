@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.wrewolf.thetaleclient.BuildConfig;
 import com.wrewolf.thetaleclient.DataViewMode;
 import com.wrewolf.thetaleclient.R;
@@ -31,6 +32,8 @@ import com.wrewolf.thetaleclient.util.DialogUtils;
 import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.RequestUtils;
 import com.wrewolf.thetaleclient.util.UiUtils;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * @author Hamster
@@ -102,10 +105,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG) {
-            // TODO: Вставить FireBase
-            // Crashlytics.start(this);
-        }
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
 
         textLogin = (TextView) findViewById(R.id.login_text_login);

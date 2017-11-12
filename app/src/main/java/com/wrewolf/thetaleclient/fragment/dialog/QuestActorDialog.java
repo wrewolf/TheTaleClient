@@ -56,8 +56,8 @@ public class QuestActorDialog extends BaseDialog {
                         UiUtils.getInfoItem(getString(R.string.quest_actor_gender), questActorInfo.personInfo.gender.getName()));
                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_profession),
                         UiUtils.getInfoItem(getString(R.string.quest_actor_profession), questActorInfo.personInfo.profession.getName()));
-                UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_mastery),
-                        UiUtils.getInfoItem(getString(R.string.quest_actor_mastery), questActorInfo.personInfo.mastery));
+//                UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_person_mastery),
+//                        UiUtils.getInfoItem(getString(R.string.quest_actor_mastery), questActorInfo.personInfo.mastery));
                 new GameInfoPrerequisiteRequest(new Runnable() {
                     @Override
                     public void run() {
@@ -67,9 +67,7 @@ public class QuestActorDialog extends BaseDialog {
                                 setPlaceLink(
                                         view.findViewById(R.id.dialog_quest_actor_person_place),
                                         getString(R.string.quest_actor_place),
-                                        // TODO: переписать
-                                        "dummy",
-//                                        response.places.get(questActorInfo.personInfo.placeId).name,
+                                        response.places.get(questActorInfo.personInfo.placeId).name,
                                         questActorInfo.personInfo.placeId);
                             }
 
@@ -96,9 +94,7 @@ public class QuestActorDialog extends BaseDialog {
                             public void processResponse(MapResponse response) {
                                 UiUtils.setText(view.findViewById(R.id.dialog_quest_actor_place_size), UiUtils.getInfoItem(
                                         getString(R.string.map_place_size),
-                                        // TODO: заглушка
-                                        String.valueOf(0)));
-//                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
+                                        String.valueOf(response.places.get(questActorInfo.placeInfo.id).size)));
                             }
 
                             @Override

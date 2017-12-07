@@ -9,6 +9,7 @@ public enum CardFullType {
     FRESH_LOOK_2("117-2", CardTargetType.PERSON, true),
     FRESH_LOOK_3("117-4", CardTargetType.ENERGY_REGENERATION, false),
     FRESH_LOOK_6("117-6", CardTargetType.RISK_LEVEL, false),
+    FRESH_LOOK_7("117-7", CardTargetType.EQUIPMENT_SLOT, true),
     FRESH_LOOK_8("117-8", CardTargetType.ARCHETYPE, false),
     ;
 

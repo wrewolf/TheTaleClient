@@ -7,25 +7,32 @@ package com.wrewolf.thetaleclient.api.dictionary;
 public enum ArtifactType {
 
     JUNK(0, "хлам"),
-    MAIN_HAND(1, "основная рука"),
-    OFF_HAND(2, "вторая рука"),
-    BODY(3, "доспех"),
-    AMULET(4, "амулет"),
-    HEAD(5, "шлем"),
-    CLOAK(6, "плащ"),
-    SHOULDERS(7, "наплечники"),
-    GLOVES(8, "перчатки"),
-    TROUSERS(9, "штаны"),
-    BOOTS(10, "обувь"),
-    RING(11, "кольцо"),
+    MAIN_HAND(1, "основная рука", "EQUIPMENT_SLOT.HAND_PRIMARY"),
+    OFF_HAND(2, "вторая рука", "EQUIPMENT_SLOT.HAND_SECONDARY"),
+    BODY(3, "доспех", "EQUIPMENT_SLOT.PLATE"),
+    AMULET(4, "амулет", "EQUIPMENT_SLOT.AMULET"),
+    HEAD(5, "шлем", "EQUIPMENT_SLOT.HELMET"),
+    CLOAK(6, "плащ", "EQUIPMENT_SLOT.CLOAK"),
+    SHOULDERS(7, "наплечники", "EQUIPMENT_SLOT.SHOULDERS"),
+    GLOVES(8, "перчатки", "EQUIPMENT_SLOT.GLOVES"),
+    TROUSERS(9, "штаны", "EQUIPMENT_SLOT.PANTS"),
+    BOOTS(10, "обувь", "EQUIPMENT_SLOT.BOOTS"),
+    RING(11, "кольцо", "EQUIPMENT_SLOT.RING"),
     ;
 
     private final int code;
     private final String name;
+    private String value;
 
     private ArtifactType(final int code, final String name) {
         this.code = code;
         this.name = name;
+    }
+
+    ArtifactType(final int code, final String name, final String value) {
+        this.code = code;
+        this.name = name;
+        this.value = value;
     }
 
     public int getCode() {
@@ -34,6 +41,10 @@ public enum ArtifactType {
 
     public String getName() {
         return name;
+    }
+
+    public String getValue() {
+        return value;
     }
 
 }

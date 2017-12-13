@@ -21,20 +21,25 @@ import com.wrewolf.thetaleclient.api.dictionary.CardTargetType;
 import com.wrewolf.thetaleclient.api.dictionary.CardType;
 import com.wrewolf.thetaleclient.api.dictionary.EnergyRegeneration;
 import com.wrewolf.thetaleclient.api.dictionary.RiskLevel;
+import com.wrewolf.thetaleclient.api.model.ArtifactInfo;
 import com.wrewolf.thetaleclient.api.model.CardInfo;
 import com.wrewolf.thetaleclient.api.model.CouncilMemberInfo;
 import com.wrewolf.thetaleclient.api.model.PlaceInfo;
+import com.wrewolf.thetaleclient.api.request.GameInfoRequest;
 import com.wrewolf.thetaleclient.api.request.PlaceRequest;
 import com.wrewolf.thetaleclient.api.request.PlacesRequest;
 import com.wrewolf.thetaleclient.api.request.UseCardRequest;
 import com.wrewolf.thetaleclient.api.response.CommonResponse;
+import com.wrewolf.thetaleclient.api.response.GameInfoResponse;
 import com.wrewolf.thetaleclient.api.response.PlaceResponse;
 import com.wrewolf.thetaleclient.api.response.PlacesResponse;
 import com.wrewolf.thetaleclient.util.DialogUtils;
 import com.wrewolf.thetaleclient.util.ObjectUtils;
+import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.RequestUtils;
 import com.wrewolf.thetaleclient.util.UiUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,6 +62,7 @@ public class CardUseDialog extends BaseDialog {
     private List<PlaceInfo> places;
     private List<Archetype> archetypes;
     private List<RiskLevel> riskLevels;
+    private List<ArtifactInfo> artifactInfos;
     private List<EnergyRegeneration> energyRegenerations;
     private Map<Integer, List<CouncilMemberInfo>> persons;
     private CardInfo card;
@@ -276,6 +282,51 @@ public class CardUseDialog extends BaseDialog {
                     );
                 }
             });
+        } else if (card.type.getTargetType(card.fullType) == CardTargetType.EQUIPMENT_SLOT) {
+            viewAction.setEnabled(false);
+
+            blockPlace.setVisibility(View.VISIBLE);
+            textPlace.setEnabled(false);
+            textPlace.setText(getString(R.string.common_loading));
+
+            final ApiResponseCallback<GameInfoResponse> callback = RequestUtils.wrapCallback(new ApiResponseCallback<GameInfoResponse>() {
+
+                @Override
+                public void processResponse(GameInfoResponse response) {
+                    artifactInfos = new ArrayList<>(response.account.hero.equipment.values());
+
+                    final int count = artifactInfos.size() + 1;
+                    final String[] artifactInfoNames = new String[count];
+                    artifactInfoNames[0] = getString(R.string.game_cards_forget);
+                    for (int i = 1; i < count; i++) {
+                        artifactInfoNames[i] = artifactInfos.get(i - 1).name;
+                    }
+
+                    textPlace.setEnabled(true);
+                    onArtifactSelected(0);
+
+                    textPlace.setOnClickListener(v ->
+                        DialogUtils.showChoiceDialog(
+                            getChildFragmentManager(),
+                            getString(R.string.game_card_use_equipment_slot),
+                            artifactInfoNames,
+                            position -> onArtifactSelected(position)
+                        )
+                    );
+                }
+
+                @Override
+                public void processError(GameInfoResponse response) {
+                    textPlace.setText(getString(R.string.common_error_hint));
+                }
+            }, this);
+
+            final int watchingAccountId = PreferencesManager.getWatchingAccountId();
+            if(watchingAccountId == 0) {
+                new GameInfoRequest(true).execute(callback, true);
+            } else {
+                new GameInfoRequest(true).execute(watchingAccountId, callback, true);
+            }
         } else {
             blockPlace.setVisibility(View.GONE);
             blockPerson.setVisibility(View.GONE);
@@ -369,6 +420,30 @@ public class CardUseDialog extends BaseDialog {
                         card.id, riskLevel.getValue(),
                         getCardUseCallback(progressDialog));
             }
+        });
+    }
+
+    private void onArtifactSelected(final int artifactIndex) {
+        final String value;
+        if (artifactIndex == 0) {
+            value = null;
+            textPlace.setText(getString(R.string.game_cards_forget));
+        } else {
+            final ArtifactInfo artifactInfo = artifactInfos.get(artifactIndex - 1);
+            textPlace.setText(artifactInfo.name);
+            value = artifactInfo.type.getValue();
+        }
+
+        viewAction.setEnabled(true);
+        viewAction.setOnClickListener(v -> {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                    getString(R.string.game_card_use),
+                    getString(R.string.game_card_use_progress),
+                    true, false);
+            new UseCardRequest().execute(
+                    card.id, value,
+                    getCardUseCallback(progressDialog)
+            );
         });
     }
 

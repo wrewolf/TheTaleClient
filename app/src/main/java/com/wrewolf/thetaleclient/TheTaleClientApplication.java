@@ -3,12 +3,15 @@ package com.wrewolf.thetaleclient;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.wrewolf.thetaleclient.api.cache.RequestCacheManager;
 import com.wrewolf.thetaleclient.util.NotificationManager;
 import com.wrewolf.thetaleclient.util.PreferencesManager;
 import com.wrewolf.thetaleclient.util.map.MapUtils;
 import com.wrewolf.thetaleclient.util.onscreen.OnscreenStateWatcher;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * @author Hamster
@@ -37,7 +40,7 @@ public class TheTaleClientApplication extends Application
   public void onCreate()
   {
     super.onCreate();
-
+    Fabric.with(this, new Crashlytics());
     context = getApplicationContext();
     analytics = FirebaseAnalytics.getInstance(context);
     preferencesManager = new PreferencesManager(context);

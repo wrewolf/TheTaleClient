@@ -17,6 +17,7 @@
         android:largeHeap="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:theme="@style/AppTheme">
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="1bb680b288d20c3555bac35819209cb01665ab0f"

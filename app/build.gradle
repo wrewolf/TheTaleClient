@@ -104,9 +104,10 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.8.0'
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
-        transitive = true;
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
     }
+
     //Gson
 //    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
 

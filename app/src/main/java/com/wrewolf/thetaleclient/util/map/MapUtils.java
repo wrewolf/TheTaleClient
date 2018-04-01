@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class MapUtils {
 
-    private static final String MAP_SPRITE_URL = "http:%s%s";
+    private static final String MAP_SPRITE_URL = "https:%s%s";
     public static final int MAP_TILE_SIZE = 32;
     private static final int HERO_SPRITE_SHIFT_Y = -12;
 

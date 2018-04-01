@@ -20,7 +20,7 @@ import java.util.Map;
 public class MapCellRequest extends CommonRequest
 {
 
-  private static final String URL = "http://the-tale.org/game/map/cell-info";
+  private static final String URL = "https://the-tale.org/game/map/cell-info";
 
   public void execute(final int cellX, final int cellY, final CommonResponseCallback<MapCellResponse, String> callback)
   {

@@ -41,9 +41,9 @@ import io.fabric.sdk.android.Fabric;
  */
 public class LoginActivity extends FragmentActivity {
 
-    private static final String URL_HOME = "http://the-tale.org/?action=the-tale-client";
-    private static final String URL_REGISTRATION = "http://the-tale.org/accounts/registration/fast?action=the-tale-client";
-    private static final String URL_PASSWORD_REMIND = "http://the-tale.org/accounts/profile/reset-password?action=the-tale-client";
+    private static final String URL_HOME = "https://the-tale.org/?action=the-tale-client";
+    private static final String URL_REGISTRATION = "https://the-tale.org/accounts/registration/fast?action=the-tale-client";
+    private static final String URL_PASSWORD_REMIND = "https://the-tale.org/accounts/profile/reset-password?action=the-tale-client";
     private static final long THIRD_PARTY_AUTH_STATE_TIMEOUT = 10000;
 
     private final Handler handler = new Handler(Looper.getMainLooper());

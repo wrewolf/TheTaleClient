@@ -39,7 +39,7 @@ import okhttp3.Response;
 public class ChatManager
 {
 
-  private static final String URL_BASE = "http://embed.tlk.io/";
+  private static final String URL_BASE = "https://embed.tlk.io/";
   private static final String URL_MAIN = URL_BASE + "the-tale";
   private static final String URL_PARTICIPANT = URL_BASE + "api/participant";
   private static final String URL_MESSAGE = URL_BASE + "api/chats/141060/messages";

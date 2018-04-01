@@ -20,8 +20,8 @@ import java.util.Map;
  */
 public class MapRequest extends AbstractApiRequest<MapResponse>
 {
-  //  private static final String URL = "http://the-tale.org/dcont/map/region-%s.js";
-  //private static final String URL = "http://the-tale.org/game/map/api/region?api_version=0.1&api_client=the_tale-v0.3.24.6&v=%s";
+  //  private static final String URL = "https://the-tale.org/dcont/map/region-%s.js";
+  //private static final String URL = "https://the-tale.org/game/map/api/region?api_version=0.1&api_client=the_tale-v0.3.24.6&v=%s";
 
   private final String mapVersion;
 

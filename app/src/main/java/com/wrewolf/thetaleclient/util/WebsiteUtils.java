@@ -45,20 +45,20 @@ public class WebsiteUtils
 
   private static final int THREADS_COUNT = 20;
 
-  public static final String URL_GAME = "http://the-tale.org/game/?action=the-tale-client";
-  public static final String URL_PROFILE_KEEPER = "http://the-tale.org/accounts/%d?action=the-tale-client";
-  public static final String URL_PROFILE_HERO = "http://the-tale.org/game/heroes/%d?action=the-tale-client";
+  public static final String URL_GAME = "https://the-tale.org/game/?action=the-tale-client";
+  public static final String URL_PROFILE_KEEPER = "https://the-tale.org/accounts/%d?action=the-tale-client";
+  public static final String URL_PROFILE_HERO = "https://the-tale.org/game/heroes/%d?action=the-tale-client";
 
-  private static final String PAGE_ACCOUNTS = "http://the-tale.org/accounts/";
-  private static final String PAGE_MONSTERS = "http://the-tale.org/guide/mobs/";
-  private static final String PAGE_MONSTER = "http://the-tale.org/guide/mobs/%d/info";
-  private static final String PAGE_ARTIFACT = "http://the-tale.org/guide/artifacts/%d/info";
+  private static final String PAGE_ACCOUNTS = "https://the-tale.org/accounts/";
+  private static final String PAGE_MONSTERS = "https://the-tale.org/guide/mobs/";
+  private static final String PAGE_MONSTER = "https://the-tale.org/guide/mobs/%d/info";
+  private static final String PAGE_ARTIFACT = "https://the-tale.org/guide/artifacts/%d/info";
 
   private static final Object lock = new Object();
 
   /**
    * Enums all game accounts using provided callback
-   * Uses HTML parsing from http://the-tale.org/accounts/
+   * Uses HTML parsing from https://the-tale.org/accounts/
    */
   public static void enumAccounts(final AccountCallback callback)
   {
@@ -218,7 +218,7 @@ public class WebsiteUtils
 
   /**
    * Enums all game monsters using provided callback
-   * Uses HTML parsing from http://the-tale.org/guide/mobs/
+   * Uses HTML parsing from https://the-tale.org/guide/mobs/
    */
   public static void enumMonsters(final MonsterCallback callback)
   {

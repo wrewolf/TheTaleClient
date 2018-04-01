@@ -37,7 +37,7 @@ import okhttp3.Response;
 public abstract class AbstractApiRequest<T extends AbstractApiResponse>
 {
 
-  private static final String URL = "http://the-tale.org/%s";
+  private static final String URL = "https://the-tale.org/%s";
   private static final long RETRY_TIMEOUT_MILLIS = 1000; // 1 s
 
   private static final String COOKIE_CSRF_TOKEN = "csrftoken";

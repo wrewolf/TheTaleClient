@@ -78,7 +78,7 @@ public enum MapModification {
 //                new float[]{360.0f / size * index, 0.9f, 0.5f});
 //    }
 
-    // http://phrogz.net/css/distinct-colors.html
+    // https://phrogz.net/css/distinct-colors.html
     private static final Integer[] colors = new Integer[]{
             0xc04c0f0f, 0xc0997a1f, 0xc052cc8f, 0xc06673ff, 0xc0331f2c,
             0xc0e55c5c, 0xc0ccbb00, 0xc0b8e6d6, 0xc02929cc, 0xc0cc0055,

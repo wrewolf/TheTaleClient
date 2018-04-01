@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
 
 //        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
 //        Retrofit retrofit = new Retrofit.Builder()
-//            .baseUrl("http://the-tale.org")
+//            .baseUrl("https://the-tale.org")
 //            .client(okHttpClient)
 //            .build();
     }

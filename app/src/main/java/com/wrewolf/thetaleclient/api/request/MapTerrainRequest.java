@@ -14,7 +14,7 @@ import org.json.JSONException;
  */
 public class MapTerrainRequest extends CommonRequest {
 
-    public static final String URL_BASE = "http://the-tale.org/";
+    public static final String URL_BASE = "https://the-tale.org/";
     private static final String URL = URL_BASE + "game/map/api/region?api_version=0.1&api_client=the_tale-v0.3.24.6";
 
     public void execute(final CommonResponseCallback<MapTerrainResponse, String> callback) {

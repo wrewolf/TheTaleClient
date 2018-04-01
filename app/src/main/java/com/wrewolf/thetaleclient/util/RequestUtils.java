@@ -24,7 +24,7 @@ import java.net.URI;
  */
 public class RequestUtils {
 
-    public static final String URL_BASE = "http://the-tale.org";
+    public static final String URL_BASE = "https://the-tale.org";
 
     public static final String COOKIE_SESSION_ID = "sessionid";
 
